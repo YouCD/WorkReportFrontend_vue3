@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'log',
                 name: 'LogBrowse',
                 meta:{menu:"日志"},
-                component: () => import('../views/vLogBrowse.vue')
+                component: () => import('../views/LogBrowse.vue')
             },
             {
                 path: 'seting',

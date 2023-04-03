@@ -2,7 +2,8 @@ export interface PageRequestData {
     pageIndex: number,
     pageSize: number
 }
-export interface WorkContent  {
+
+export interface WorkContent {
     id: number,
     date: number,
     type1: string,
@@ -13,6 +14,14 @@ export interface WorkContent  {
 }
 
 export interface WorkContentRespList {
-    work_content_resp_list:  WorkContent [],
+    work_content_resp_list: WorkContent [],
     sum: number
+}
+
+
+export interface LogContent {
+    type1: number,
+    type2: number,
+    content:string,
+    date: number
 }
