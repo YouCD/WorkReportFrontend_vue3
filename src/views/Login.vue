@@ -1,89 +1,112 @@
 <template>
   <div class="outer-wrap">
-    <div class="login-panel">
-      <a-form
-          class="login-form"
-          :label-col="labelCol"
-          :wrapper-col="wrapperCol"
-          :model="loginFrom"
-          @submit="handleSubmit"
-      >
-        <a-form-item>
-          <a-input
-              v-model:value="loginFrom.username"
-              v-decorator="[
-                'userName',
-                { rules: [{ required: true, message: 'Please input your username!' }] },
-              ]"
-              placeholder="请输入账户"
+    <div class="loginBox">
+      <div class="login-panel">
+        <a-form
+            :model="data.loginFrom"
+            name="basic"
+            :label-col="{ span: 8 }"
+            :wrapper-col="{ span: 16 }"
+            autocomplete="off"
+            @finish="onFinish"
+            @finishFailed="onFinishFailed"
+        >
+          <a-form-item
+              label="账户"
+              name="username"
+              :rules="[{ required: true, message: '请输入账户' }]"
           >
-            <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-input
-              v-model:value="loginFrom.password"
-              v-decorator="[
-                'password',
-                { rules: [{ required: true, message: 'Please input your Password!' }] },
-              ]"
-              type="password"
-              placeholder="请输入密码"
+            <a-input v-model:value="data.loginFrom.username">
+              <template #prefix>
+                <UserOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+              </template>
+            </a-input>
+          </a-form-item>
+
+          <a-form-item
+              label="密码"
+              name="password"
+              :rules="[{ required: true, message: '请输入密码!' }]"
           >
-            <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)"/>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-button type="primary" html-type="submit" class="login-form-button">
-            登入
-          </a-button>
-        </a-form-item>
-      </a-form>
+            <a-input-password v-model:value="data.loginFrom.password">
+              <template #prefix>
+                <LockOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+              </template>
+            </a-input-password>
+          </a-form-item>
+          <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+            <a-button class="login-form-button" type="primary" html-type="submit">登入</a-button>
+          </a-form-item>
+        </a-form>
+      </div>
     </div>
 
   </div>
 </template>
 
-<script setup  lang="ts">
-import {reactive, ref,toRefs} from "vue";
-import {LoginData} from "../types/login";
+<script setup lang="ts">
+import {reactive} from "vue";
+import {LoginRequestData, LoginResponseData} from "../types/login";
+import {Login} from "../request/login";
+import {useRouter} from 'vue-router'
+
+
 let data = reactive({
-  labelCol: { span: 4 },
-  wrapperCol: { span: 20 },
-  loginFrom:new LoginData().loginFrom,
-  partLoading: false,
+  labelCol: {span: 4},
+  wrapperCol: {span: 20},
+  loginFrom: {
+    username: "",
+    password: ""
+  } as LoginRequestData,
+
 });
-const { labelCol,wrapperCol ,loginFrom} =toRefs(data)
+
+const router = useRouter()
+
+const onFinish = () => {
+  Login(data.loginFrom).then(res => {
+    if (res.flag) {
+      const jwt = res.data as LoginResponseData
+      localStorage.setItem("jwt", jwt.token)
+      router.push("/")
+    }
+  })
+};
+const onFinishFailed = (errorInfo: any) => {
+  console.log('Failed:', errorInfo);
+};
 
 
-function handleSubmit(e:any) {
-  console.log(loginFrom.value)
-}
-
-
-//
-// function passwordError() {
-//   const { getFieldError, isFieldTouched } = this.form;
-//   return isFieldTouched('password') && getFieldError('password');
-// }
 </script>
 
 <style scoped>
 .outer-wrap {
   /*只有同时为html和body设置height: 100%时，这里才生效，
     并且随浏览器窗口变化始终保持和浏览器视窗等高*/
-  height: 100%;
+  height:100vh;
+  background-image: url('/src/assets/bg.png');
+  background-size: cover;
+  background-position: center center;
 }
 
-.login-panel {
+.loginBox {
   width: 500px;
-  height: 100px;
-  position: absolute;
+  height: 300px;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   margin: auto;
+  border-radius: 10px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.login-panel {
+  width: 400px;
+  height: 200px;
+  top: 25%;
+  position: absolute
 }
 
 .login-form-button {

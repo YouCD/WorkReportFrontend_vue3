@@ -1,11 +1,17 @@
-export interface LoginDataInt{
-    username:string,
-    password:string
+import service from "../request";
+import {GET} from "../request/request";
+
+export interface LoginRequestData {
+    username: string,
+    password: string
 }
 
-export class  LoginData{
-    loginFrom:LoginDataInt={
-        username:"",
-        password:""
-    }
+
+
+export interface LoginResponseData {
+    token: string,
+    uid: string
 }
+
+
+
