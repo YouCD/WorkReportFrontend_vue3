@@ -64,6 +64,8 @@ let menuList=ref([
     }]
   }
 ])
+const collapsed=ref(true)
+const selectedKeys=ref([])
 
 </script>
 <style>
