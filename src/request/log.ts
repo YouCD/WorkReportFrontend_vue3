@@ -1,6 +1,6 @@
 import {GET, POST, PUT} from "./request";
-import {LoginRequestData} from "../types/login";
-import {PageRequestData} from "../types/log";
+import {LoginRequestData} from "@/types/login";
+import {PageRequestData} from "@/types/log";
 
 //  添加 日志
 export const AddLog=(data:LoginRequestData)=>POST('/w/workLog',data )

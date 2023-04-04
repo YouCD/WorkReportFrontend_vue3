@@ -25,8 +25,8 @@
 import {computed, onMounted, reactive,defineComponent} from "vue"
 import moment from "moment"
 import "moment/locale/zh-cn";
-import {FetchLog} from "../../request/log";
-import {PageRequestData, WorkContent, WorkContentRespList} from "../../types/log";
+import {FetchLog} from "@/request/log";
+import {IPageRequestData, IWorkContent, IWorkContentRespList} from "@/types/log";
 
 moment.locale('zh-cn')
 
@@ -50,7 +50,7 @@ const pagination = computed(() => ({
   showSizeChanger: true, // 是否显示pagesize选择
   showQuickJumper: true, // 是否显示跳转窗
 }));
-const defaultPageObj: PageRequestData = {
+const defaultPageObj: IPageRequestData = {
   pageIndex: 1,
   pageSize: pagination.value.defaultPageSize
 }
@@ -59,16 +59,16 @@ const handleTableChange = (pag: any, ) => {
   const a = {
     pageIndex: pag.current,
     pageSize: pag.pageSize
-  } as PageRequestData
+  } as IPageRequestData
   FetchLog(a).then((res) => {
-    const a = res.data as WorkContentRespList
+    const a = res.data as IWorkContentRespList
     data.tableData = a.work_content_resp_list
   })
 };
 
 
 const data = reactive({
-  tableData: [] as WorkContent[],
+  tableData: [] as IWorkContent[],
   columns,
   pagination,
   activeKey:0,
@@ -78,7 +78,7 @@ const data = reactive({
 //  获取 工作日志
 onMounted(() => {
       FetchLog(defaultPageObj).then(res => {
-        const resData = res.data as WorkContentRespList
+        const resData = res.data as IWorkContentRespList
         data.tableData = resData.work_content_resp_list
       })
     }

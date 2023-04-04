@@ -34,10 +34,10 @@ import dayjs, {Dayjs} from 'dayjs';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import "dayjs/locale/zh-cn";
 import moment from "moment";
-import {LogContent} from "../../types/log"; // 引入解决日历中英文混杂问题
+import {ILogContent} from "@/types/log"; // 引入解决日历中英文混杂问题
 const locale = ref(zhCN);
 
-const log: LogContent = {
+const log: ILogContent = {
   type1: 0,
   type2: 0,
   content: "",

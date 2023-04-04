@@ -14,8 +14,8 @@
 <script setup lang="ts">
 import {computed, onMounted, reactive,watch} from "vue"
 
-import LoagTable from "../components/LogBrowse/LoagTable.vue"
-import AddLog from "../components/LogBrowse/AddLog.vue"
+import LoagTable from "@/components/LogBrowse/LoagTable.vue"
+import AddLog from "@/components/LogBrowse/AddLog.vue"
 
 
 

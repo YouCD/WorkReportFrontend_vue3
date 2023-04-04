@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import {reactive} from "vue";
 import {LoginRequestData, LoginResponseData} from "../types/login";
-import {Login} from "../request/login";
+import {Login} from "@/request/login";
 import {useRouter} from 'vue-router'
 
 
