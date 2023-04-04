@@ -1,7 +1,7 @@
 <template>
-<div>
-  Seting.vue
-</div>
+  <div>
+    Seting.vue
+  </div>
 
 </template>
 

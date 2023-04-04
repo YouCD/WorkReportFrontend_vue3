@@ -91,7 +91,7 @@ function goToday() {
 .RightClass {
   float: right;
   padding: 10px;
-  width: calc(100% - 330px) ;
+  width: calc(100% - 330px);
   background: white;
   border-radius: 4px
 }

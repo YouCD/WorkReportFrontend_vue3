@@ -10,13 +10,13 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'log',
                 name: 'LogBrowse',
-                meta:{menu:"日志"},
+                meta: {menu: "日志"},
                 component: () => import('../views/LogBrowse.vue')
             },
             {
                 path: 'seting',
                 name: 'Seting',
-                meta:{menu:"设置"},
+                meta: {menu: "设置"},
                 component: () => import('../views/Seting.vue')
             }
 

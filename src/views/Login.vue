@@ -46,9 +46,9 @@
 
 <script setup lang="ts">
 import {reactive} from "vue";
-import {LoginRequestData, LoginResponseData} from "../types/login";
-import {Login} from "@/request/login";
+import {LoginHandler, LoginRequestData} from "../types/login";
 import {useRouter} from 'vue-router'
+// import {Post} from "@/request/request";
 
 
 let data = reactive({
@@ -63,14 +63,13 @@ let data = reactive({
 
 const router = useRouter()
 
-const onFinish = () => {
-  Login(data.loginFrom).then(res => {
-    if (res.flag) {
-      const jwt = res.data as LoginResponseData
-      localStorage.setItem("jwt", jwt.token)
-      router.push("/")
-    }
-  })
+
+const onFinish = async () => {
+  const result = await LoginHandler(data.loginFrom)
+  if (result.flag) {
+    localStorage.setItem("jwt", result.data.token)
+    await router.push("/")
+  }
 };
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
@@ -83,7 +82,7 @@ const onFinishFailed = (errorInfo: any) => {
 .outer-wrap {
   /*只有同时为html和body设置height: 100%时，这里才生效，
     并且随浏览器窗口变化始终保持和浏览器视窗等高*/
-  height:100vh;
+  height: 100vh;
   background-image: url('/src/assets/bg.png');
   background-size: cover;
   background-position: center center;

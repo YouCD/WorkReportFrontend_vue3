@@ -1,7 +1,7 @@
 <template>
   <a-table
       :columns="data.columns"
-      :data-source="data.tableData"
+      :data-source="LogData"
       :row-key="record => record.id"
       :pagination="data.pagination"
       @change="handleTableChange"
@@ -19,14 +19,16 @@
       </template>
     </template>
   </a-table>
+
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, reactive,defineComponent} from "vue"
+import {computed, onMounted, reactive,} from "vue"
 import moment from "moment"
 import "moment/locale/zh-cn";
-import {FetchLog} from "@/request/log";
-import {IPageRequestData, IWorkContent, IWorkContentRespList} from "@/types/log";
+import {IPageRequestData} from "@/types/log";
+import {logStore} from "@/store/log";
+import {storeToRefs} from "pinia";
 
 moment.locale('zh-cn')
 
@@ -50,37 +52,32 @@ const pagination = computed(() => ({
   showSizeChanger: true, // 是否显示pagesize选择
   showQuickJumper: true, // 是否显示跳转窗
 }));
-const defaultPageObj: IPageRequestData = {
-  pageIndex: 1,
-  pageSize: pagination.value.defaultPageSize
-}
 
-const handleTableChange = (pag: any, ) => {
-  const a = {
+
+const handleTableChange = async (pag: any,) => {
+  const a: IPageRequestData = {
     pageIndex: pag.current,
     pageSize: pag.pageSize
-  } as IPageRequestData
-  FetchLog(a).then((res) => {
-    const a = res.data as IWorkContentRespList
-    data.tableData = a.work_content_resp_list
-  })
+  }
+  await getLogData(a)
 };
 
 
 const data = reactive({
-  tableData: [] as IWorkContent[],
   columns,
   pagination,
-  activeKey:0,
 })
 
+const {LogData} = storeToRefs(logStore())
+const {getLogData} = logStore()
 
 //  获取 工作日志
-onMounted(() => {
-      FetchLog(defaultPageObj).then(res => {
-        const resData = res.data as IWorkContentRespList
-        data.tableData = resData.work_content_resp_list
-      })
+onMounted(async () => {
+      const defaultPageObj: IPageRequestData = {
+        pageIndex: 1,
+        pageSize: pagination.value.defaultPageSize
+      }
+      await getLogData(defaultPageObj)
     }
 )
 
