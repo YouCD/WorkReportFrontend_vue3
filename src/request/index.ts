@@ -45,7 +45,7 @@ export interface IResponse<d extends {}> {
 interface IHttp {
     Post<T>(url: string, data: any | unknown): Promise<T>;
 
-    Get<T>(url: string, data: any | unknown): Promise<T>;
+    Get<T>(url: string, data?: any | unknown): Promise<T>;
 }
 
 export const http: IHttp = {
