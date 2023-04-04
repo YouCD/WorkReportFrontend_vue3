@@ -46,9 +46,9 @@
 
 <script setup lang="ts">
 import {reactive} from "vue";
-import {LoginHandler, LoginRequestData} from "../types/login";
+import {LoginHandler, LoginRequestData} from "@/types/login";
 import {useRouter} from 'vue-router'
-// import {Post} from "@/request/request";
+
 
 
 let data = reactive({

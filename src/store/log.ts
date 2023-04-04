@@ -13,8 +13,6 @@ export const logStore = defineStore('log', () => {
         sum = res.data.sum
         LogData.value = res.data.work_content_resp_list
     }
-
-
     return {
         LogData,
         sum,

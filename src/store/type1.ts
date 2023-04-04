@@ -1,8 +1,6 @@
 import {defineStore} from 'pinia'
 import {ref} from "vue";
-import {IType,FetchType1} from "@/types/type1";
-
-
+import {FetchType1, IType} from "@/types/type1";
 
 
 export const type1Store = defineStore('type1', () => {

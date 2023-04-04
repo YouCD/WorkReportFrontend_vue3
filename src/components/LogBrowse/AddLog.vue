@@ -4,11 +4,9 @@
 
     <div class="LeftClass">
       <div class="CalendarClass">
-        <a-config-provider :locale="locale">
-          <a-calendar v-model:value="today" :fullscreen="false" :locale="locale"
-                      valueFormat="YYYY-MM-DD"
-                      @select="onSelect"/>
-        </a-config-provider>
+        <a-calendar v-model:value="today" :fullscreen="false"
+                    valueFormat="YYYY-MM-DD"
+                    @select="onSelect"/>
       </div>
       <a-button type="primary" style="width: 100%;margin-top: 8px" @click="goToday">今日</a-button>
     </div>
@@ -21,22 +19,20 @@
           :label-col="{ span: 8 }"
           :wrapper-col="{ span: 16 }"
           autocomplete="off"
-          @finish="onFinish"
-          @finishFailed="onFinishFailed"
+
       >
         <a-form-item
             label="工作大类"
-            name="username"
+            name="type1"
             :rules="[{ required: true, message: '请选择工作大类' }]"
         >
           <a-select
               ref="select"
-              v-model="logData.type1"
+              v-model:value="logData.type1"
               style="width: 100%"
-              @focus="focus"
               @change="type1handleChange"
           >
-            <a-select-option :value="item.id" v-for="(item,index) in type1Data" :key="includes">
+            <a-select-option v-model:value="item.id" v-for="(item,index) in type1Data" :key="index">
               {{ item.description }}
             </a-select-option>
 
@@ -45,20 +41,16 @@
 
         <a-form-item
             label="工作子类"
-            name="password"
+            name="type2"
             :rules="[{ required: true, message: '请选择工作子类!' }]"
         >
           <a-select
               ref="select"
               style="width: 100%"
-              v-model="logData.type2"
-              @focus="focus"
+              v-model:value="logData.type2"
               @change="type2handleChange"
           >
-
-            type2Data
-
-            <a-select-option :value="item.id" v-for="(item,index) in type2Data" :key="includes">
+            <a-select-option :value="item.id" v-for="(item,index) in type2Data" :key="index">
               {{ item.description }}
             </a-select-option>
 
@@ -69,10 +61,12 @@
     </div>
 
     <div class="RightClass">
-      <a-textarea>
+      <div>
+        <a-textarea :rows="14" v-model:value="logData.content">
+        </a-textarea>
+      </div>
 
-      </a-textarea>
-      <a-button type="primary" @click="AddLogHandler">添加</a-button>
+      <a-button type="primary" @click="AddLogHandler" style="margin-top: 10px;width: 100%;">添加</a-button>
     </div>
 
   </div>
@@ -85,38 +79,30 @@ import {onMounted, reactive, ref} from 'vue';
 
 import dayjs, {Dayjs} from 'dayjs';
 
-import zhCN from 'ant-design-vue/es/locale/zh_CN';
-import "dayjs/locale/zh-cn";
 import moment from "moment";
-import {IAddLogData, } from "@/types/log";
+import {AddLog, IAddLogData,} from "@/types/log";
 import {storeToRefs} from "pinia";
 import {type1Store} from "@/store/type1";
 import {type2Store} from "@/store/type2";
-import {IPid} from "@/types/type2";
-
-const locale = ref(zhCN);
 
 
 const today = ref<Dayjs>();
 
 const logData: IAddLogData = reactive(
     {
+      id: 0,
       type1: 0,
       type2: 0,
       content: "",
       date: moment(dayjs().format("YYYY-MM-DD")).unix()
     }
-
 )
 
 
-//  选择某天
+//  选择日期
 const onSelect = (value: Dayjs, mode: string) => {
   // 选择日期后 就直接转为 unix 时间戳
   logData.date = moment(value.toString()).unix()
-
-
-
 };
 
 //
@@ -130,26 +116,14 @@ function goToday() {
 
 
 const type1handleChange = async (value: number) => {
-  const d: IPid = {
-    pid: value
-  }
-  const a = await getType2List(d)
-  console.log(a);
-  logData.type1=value
 
+  await getType2List({pid: value})
+  logData.type1 = value
+  logData.type2 = type2Data.value[0].id
 };
 
 const type2handleChange = (value: number) => {
-  logData.type2=value
-  console.log("type2handleChange", value);
-};
-
-
-const onFinish = (e) => {
-  console.log('Finish:', e);
-};
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
+  logData.type2 = value
 };
 
 
@@ -160,8 +134,14 @@ const {type1Data} = storeToRefs(type1Store())
 const {getType1List} = type1Store()
 onMounted(async () => {
       await getType1List()
+
+      logData.type1 = type1Data.value[0].id
+      await getType2List({pid: logData.type1})
+      logData.type2 = type2Data.value[0].id
     }
 )
+
+
 //  工作子类
 const {type2Data} = storeToRefs(type2Store())
 const {getType2List} = type2Store()
@@ -169,7 +149,7 @@ const {getType2List} = type2Store()
 
 //  添加日志
 const AddLogHandler = () => {
-  console.log("添加日志", logData)
+  AddLog(logData)
 }
 
 
@@ -204,6 +184,7 @@ const AddLogHandler = () => {
   width: calc(100% - 300px - 320px - 20px);
   background: white;
   border-radius: 4px;
+  height: 380px;
 }
 
 .CenterClass {

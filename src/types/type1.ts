@@ -11,7 +11,5 @@ export interface ITypeList {
     type_list: IType[],
 }
 
-export async function FetchType1() {
-    const res = await http.Get<IResponse<ITypeList>>('w/workType1');
-    return res
-}
+export const FetchType1 = async () =>
+    await http.Get<IResponse<ITypeList>>('w/workType1');

@@ -2,7 +2,6 @@ import {http, IResponse} from "@/request";
 import {IType} from "@/types/type1";
 
 
-
 export interface ITypeList {
     type_list: IType[],
 }
@@ -12,10 +11,9 @@ export interface IPid {
 }
 
 
-
-
-
-export async function FetchType2(data:IPid) {
-    const res = await http.Get<IResponse<ITypeList>>('w/workType2',data);
-    return res
-}
+// export async function FetchType2(data:IPid) {
+//     const res = await http.Get<IResponse<ITypeList>>('w/workType2',data);
+//     return res
+// }
+export const FetchType2 = async (data: IPid) =>
+    await http.Get<IResponse<ITypeList>>('w/workType2', data);

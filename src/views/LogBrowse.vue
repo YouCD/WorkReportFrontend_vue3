@@ -7,7 +7,7 @@
   </div>
   <div>
     <div class="headerBar" v-if="data.showTable">
-      <LoagTable/>
+      <LogTable/>
     </div>
     <AddLog v-if="data.showAddLog"/>
 
@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import {reactive, watch} from "vue"
 
-import LoagTable from "@/components/LogBrowse/LoagTable.vue"
+import LogTable from "@/components/LogBrowse/LoagTable.vue"
 import AddLog from "@/components/LogBrowse/AddLog.vue"
 
 
