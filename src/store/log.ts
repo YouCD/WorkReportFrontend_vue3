@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import {ref} from "vue";
-import {FetchLog, IPageRequestData, IWorkContent} from "@/types/log";
+import {FetchLog, IContentData, IWorkContent, SearchLog} from "@/types/log";
+import {IPageRequestData} from "@/types/commont";
 
 
 // 第一个参数是应用程序中 store 的唯一 id
@@ -13,10 +14,24 @@ export const logStore = defineStore('log', () => {
         sum = res.data.sum
         LogData.value = res.data.work_content_resp_list
     }
+
+     const searchLog = async (data: IContentData) => {
+        if (data.content==""){
+            return
+        }
+        let res = await SearchLog(data)
+        sum = res.data.sum
+        LogData.value = res.data.work_content_resp_list
+    }
+
+
+
+
     return {
         LogData,
         sum,
-        getLogData
+        getLogData,
+        searchLog
     }
 })
 

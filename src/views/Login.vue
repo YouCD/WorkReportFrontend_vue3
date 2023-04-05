@@ -50,7 +50,6 @@ import {LoginHandler, LoginRequestData} from "@/types/login";
 import {useRouter} from 'vue-router'
 
 
-
 let data = reactive({
   labelCol: {span: 4},
   wrapperCol: {span: 20},

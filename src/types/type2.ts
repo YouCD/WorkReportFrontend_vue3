@@ -1,13 +1,10 @@
 import {http, IResponse} from "@/request";
 import {IType} from "@/types/type1";
+import {IPid} from "@/types/commont";
 
 
 export interface ITypeList {
     type_list: IType[],
-}
-
-export interface IPid {
-    pid: number,
 }
 
 

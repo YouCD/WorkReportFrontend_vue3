@@ -6,6 +6,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/',
         name: 'home',
         component: Layout,
+        redirect: {path: 'chart'},
         children: [
             {
                 path: 'log',
@@ -18,6 +19,12 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Seting',
                 meta: {menu: "设置"},
                 component: () => import('../views/Seting.vue')
+            },
+            {
+                path: 'chart',
+                name: 'Chart',
+                meta: {menu: "报表"},
+                component: () => import('../views/Chart.vue')
             }
 
         ],

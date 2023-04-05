@@ -5,12 +5,20 @@ import {FetchType1, IType} from "@/types/type1";
 
 export const type1Store = defineStore('type1', () => {
     let type1Data = ref<IType []>([])
+
+
     const getType1List = async () => {
         let res = await FetchType1()
         type1Data.value = res.data.type_list
     }
+
+    const FindType1ByDescription = (description: string) => {
+        return type1Data.value.find(item => item.description === description)
+    }
+
     return {
         type1Data,
-        getType1List
+        getType1List,
+        FindType1ByDescription
     }
 })

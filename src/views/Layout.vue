@@ -3,12 +3,13 @@
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <div class="logo"/>
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="1">
-          <pie-chart-outlined/>
-          <span>
-            <router-link to="/">
-              Home</router-link>
-          </span>
+        <a-menu-item key="99">
+          <template #icon>
+            <pie-chart-outlined/>
+          </template>
+          <router-link to="/">
+            Home
+          </router-link>
         </a-menu-item>
         <a-sub-menu :key="index" v-for="(item,index) in menuList ">
           <template #title>
@@ -36,7 +37,6 @@
 
       </a-layout-header>
       <a-layout-content style="margin:  16px">
-
         <div :style="{ padding: '12px', minHeight: '360px' }">
           <router-view/>
         </div>
@@ -75,7 +75,6 @@ const selectedKeys = ref([])
 
 </script>
 <style>
-
 
 
 .icon {

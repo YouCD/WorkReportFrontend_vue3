@@ -1,72 +1,50 @@
 <template>
-
   <div class="BoxClass">
-
     <div class="LeftClass">
       <div class="CalendarClass">
-        <a-calendar v-model:value="today" :fullscreen="false"
-                    valueFormat="YYYY-MM-DD"
-                    @select="onSelect"/>
+        <a-calendar v-model:value="today" :fullscreen="false" valueFormat="YYYY-MM-DD" @select="onSelect"/>
       </div>
       <a-button type="primary" style="width: 100%;margin-top: 8px" @click="goToday">今日</a-button>
+      <a-button type="primary" style="width: 100%;margin-top: 8px" @click="GetWeekLog">本周日志</a-button>
     </div>
-
-    <div class="CenterClass">
-
-      <a-form
-          :model="logData"
-          name="basic"
-          :label-col="{ span: 8 }"
-          :wrapper-col="{ span: 16 }"
-          autocomplete="off"
-
-      >
-        <a-form-item
-            label="工作大类"
-            name="type1"
-            :rules="[{ required: true, message: '请选择工作大类' }]"
-        >
-          <a-select
-              ref="select"
-              v-model:value="logData.type1"
-              style="width: 100%"
-              @change="type1handleChange"
-          >
-            <a-select-option v-model:value="item.id" v-for="(item,index) in type1Data" :key="index">
-              {{ item.description }}
-            </a-select-option>
-
-          </a-select>
-        </a-form-item>
-
-        <a-form-item
-            label="工作子类"
-            name="type2"
-            :rules="[{ required: true, message: '请选择工作子类!' }]"
-        >
-          <a-select
-              ref="select"
-              style="width: 100%"
-              v-model:value="logData.type2"
-              @change="type2handleChange"
-          >
-            <a-select-option :value="item.id" v-for="(item,index) in type2Data" :key="index">
-              {{ item.description }}
-            </a-select-option>
-
-          </a-select>
-
-        </a-form-item>
-      </a-form>
-    </div>
-
     <div class="RightClass">
-      <div>
-        <a-textarea :rows="14" v-model:value="logData.content">
-        </a-textarea>
+      <div v-if="!data.showWeekLog">
+        <a-form
+            :model="logData"
+            name="basic"
+            :label-col="{ span: 8 }"
+            :wrapper-col="{ span: 16 }"
+            autocomplete="off"
+        >
+          <a-form-item label="工作大类" name="type1" :rules="[{ required: true, message: '请选择工作大类' }]">
+            <a-select ref="select" v-model:value="logData.type1" style="width: 100%" @change="type1handleChange">
+              <a-select-option v-model:value="item.id" v-for="(item,index) in type1Data" :key="index">
+                {{ item.description }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+
+          <a-form-item label="工作子类" name="type2" :rules="[{ required: true, message: '请选择工作子类!' }]">
+            <a-select ref="select" style="width: 100%" v-model:value="logData.type2" @change="type2handleChange">
+              <a-select-option :value="item.id" v-for="(item,index) in type2Data" :key="index">
+                {{ item.description }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-form>
+        <div>
+          <a-textarea :rows="11" v-model:value="logData.content">
+          </a-textarea>
+        </div>
+        <a-button type="primary" @click="AddLogHandler" style="margin-top: 10px;width: 100%;">添加</a-button>
       </div>
 
-      <a-button type="primary" @click="AddLogHandler" style="margin-top: 10px;width: 100%;">添加</a-button>
+      <div v-if="data.showWeekLog">
+        <div v-for="(item,i) in data.weekData" :key="i">
+          {{ i }}:<br/>
+          <div v-for="(item1,i1) in item" :key="i1">{{ kg }}{{ i1 + 1 }}.{{ item1 }}</div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -80,10 +58,11 @@ import {onMounted, reactive, ref} from 'vue';
 import dayjs, {Dayjs} from 'dayjs';
 
 import moment from "moment";
-import {AddLog, IAddLogData,} from "@/types/log";
+import {AddLog, FetchWeekLog, IAddLogData, IPageRequestData,} from "@/types/log";
 import {storeToRefs} from "pinia";
 import {type1Store} from "@/store/type1";
 import {type2Store} from "@/store/type2";
+import {logStore} from "@/store/log";
 
 
 const today = ref<Dayjs>();
@@ -113,7 +92,21 @@ function goToday() {
   today.value = dayjs()
   logData.date = moment(today.value?.format("YYYY-MM-DD")).unix()
 }
-
+//
+// tion GetWeekLog
+//  @Description: 获取本周日志
+//
+function GetWeekLog() {
+  data.showWeekLog=!data.showWeekLog
+    console.log("获取本周日志")
+  if (data.showWeekLog){
+    FetchWeekLog().then(res=>{
+      console.log(res.data)
+      data.weekData=res.data
+    })
+  }
+}
+const kg= "\u3000\u3000\u3000"
 
 const type1handleChange = async (value: number) => {
 
@@ -127,7 +120,10 @@ const type2handleChange = (value: number) => {
 };
 
 
-let data = reactive({});
+let data = reactive({
+  showWeekLog:false,
+  weekData:{},
+});
 
 // 工作大类
 const {type1Data} = storeToRefs(type1Store())
@@ -146,10 +142,19 @@ onMounted(async () => {
 const {type2Data} = storeToRefs(type2Store())
 const {getType2List} = type2Store()
 
-
 //  添加日志
-const AddLogHandler = () => {
-  AddLog(logData)
+const {getLogData} = logStore()
+const AddLogHandler = async () => {
+  if (logData.content===""){
+    return
+  }
+
+  await AddLog(logData)
+  // 添加完毕后要更新数据
+  await getLogData({
+    pageIndex: 1,
+    pageSize: 10
+  })
 }
 
 
@@ -164,8 +169,8 @@ const AddLogHandler = () => {
 
 .LeftClass {
   padding: 10px;
-  width: 320px;
-  height: 380px;
+  width: 300px;
+  height: 425px;
   background: white;
   float: left;
   border-radius: 4px;
@@ -174,28 +179,16 @@ const AddLogHandler = () => {
 
 .CalendarClass {
   border: 1px solid #F0F2F5;
-
 }
 
 
 .RightClass {
-  float: right;
-  padding: 10px;
-  width: calc(100% - 300px - 320px - 20px);
-  background: white;
-  border-radius: 4px;
-  height: 380px;
-}
-
-.CenterClass {
-  width: 300px;
-  height: 380px;
-  padding: 10px;
-  /*border: 1px solid #F0F2F5;*/
-  border: 1px solid #F0F2F5;
-  border-radius: 4px;
-  background: white;
   float: left;
+  padding: 10px;
+  width: 300px;
+  background: white;
+  border-radius: 4px;
+  height: 425px;
 }
 
 </style>

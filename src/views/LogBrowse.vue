@@ -1,43 +1,36 @@
 <template>
-  <div class="headerBar">
-    <a-tabs v-model:activeKey="data.activeKey">
-      <a-tab-pane :key="1" tab="查看" force-render/>
-      <a-tab-pane :key="2" tab="添加" force-render/>
-    </a-tabs>
-  </div>
   <div>
-    <div class="headerBar" v-if="data.showTable">
+    <div class="BoxLeftClass">
+      <AddLog/>
+    </div>
+    <div class="RightClass">
       <LogTable/>
     </div>
-    <AddLog v-if="data.showAddLog"/>
-
   </div>
 </template>
 <script setup lang="ts">
-import {reactive, watch} from "vue"
-
 import LogTable from "@/components/LogBrowse/LoagTable.vue"
 import AddLog from "@/components/LogBrowse/AddLog.vue"
 
 
-const data = reactive({
-  activeKey: 2,
-  showTable: false,
-  showAddLog: true,
-})
+// const data = reactive({
+//   activeKey: 2,
+//   showTable: false,
+//   showAddLog: true,
+// })
 
-watch(
-    () => data.activeKey,
-    (newValue, oldValue) => {
-      if (newValue == 1) {
-        data.showTable = true
-        data.showAddLog = false
-      } else if (newValue == 2) {
-        data.showTable = false
-        data.showAddLog = true
-      }
-    }, {immediate: true}
-)
+// watch(
+//     () => data.activeKey,
+//     (newValue, oldValue) => {
+//       if (newValue == 1) {
+//         data.showTable = true
+//         data.showAddLog = false
+//       } else if (newValue == 2) {
+//         data.showTable = false
+//         data.showAddLog = true
+//       }
+//     }, {immediate: true}
+// )
 
 
 </script>
@@ -46,10 +39,15 @@ watch(
   margin-right: 8px;
 }
 
-.headerBar {
-  padding: 10px;
-  margin-bottom: 10px;
-  background: white;
+
+.BoxLeftClass {
+  float: left;
+}
+
+.RightClass {
+  height: 100%;
+  float: right;
+  width: calc(100% - 600px - 20px)
 }
 
 

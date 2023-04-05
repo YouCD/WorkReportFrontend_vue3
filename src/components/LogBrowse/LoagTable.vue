@@ -1,85 +1,85 @@
 <template>
-  <a-table
-      :columns="data.columns"
-      :data-source="LogData"
-      :row-key="record => record.id"
-      :pagination="data.pagination"
-      @change="handleTableChange"
-      size="small"
-  >
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.title === '操作'">
-        <a @click="EditHandler(record)">编辑</a>
-        <a-divider type="vertical"/>
-        <a>删除</a>
-      </template>
-      <template v-if="column.title === '日期'">
-        {{ moment.unix(record.date).format("YYYY-MM-DD") }}
-      </template>
-    </template>
-  </a-table>
-  <!--  编辑日志 -->
-  <a-modal v-model:visible="data.showEditModal" title="修改日志" @ok="handleOk">
-    <template #footer>
-      <a-button key="back" @click="handleCancel">取消</a-button>
-      <a-button key="submit" type="primary" @click="handleOk">完成</a-button>
-    </template>
-    <a-form
-        :model="logItem"
-        name="basic"
-        :label-col="{ span: 4 }"
-        :wrapper-col="{ span: 20 }"
-        autocomplete="off"
+  <div style="background: white;margin-bottom: 10px;padding: 10px">
+    <a-range-picker @change="onRangeChange" style="width: 75%;"/>
+    <a-button type="primary" style="float: right;width: 20%;" @click="ExportLogHandler">导出日志</a-button>
+  </div>
+  <div style="background: white;margin-bottom: 10px;padding: 10px">
+    <a-input-search style="width: 75%;" v-model:value="data.content" placeholder="输入工作内容" enter-button @search="SearchLogHandler" />
+    <a-button type="primary" style="float: right;width: 20%;" @click="ResetSearchLogHandler">重置</a-button>
+  </div>
+
+
+  <div style="  background: white;   padding: 10px;">
+    <a-table
+        :columns="data.columns"
+        :data-source="LogData"
+        :row-key="record => record.id"
+        :pagination="data.pagination"
+        @change="handleTableChange"
+        size="small"
     >
-      <a-form-item label="日期" name="date">
-        <a-date-picker style="width: 100%" v-model:value="today" @select="onSelect"/>
-      </a-form-item>
-
-      <a-form-item label="工作大类" name="type1" :rules="[{ required: true, message: '请选择工作大类' }]">
-        <a-select ref="select" v-model:value="logItem.type1" style="width: 100%" @change="type1handleChange">
-          <a-select-option v-model:value="item.id" v-for="(item,index) in type1Data" :key="index">
-            {{ item.description }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-
-      <a-form-item label="工作子类" name="type2" :rules="[{ required: true, message: '请选择工作子类!' }]">
-        <a-select
-            ref="select"
-            style="width: 100%"
-            v-model:value="logItem.type2"
-        >
-
-
-          <a-select-option :value="item.id" v-for="(item,index) in type2Data" :key="index">
-            {{ item.description }}
-          </a-select-option>
-
-        </a-select>
-
-      </a-form-item>
-
-      <a-form-item
-          label="工作内容"
-          name="content"
-          :rules="[{ required: true, message: '请输入工作内容' }]"
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.title === '操作'">
+          <a @click="EditHandler(record)">编辑</a>
+          <a-divider type="vertical"/>
+          <a @click="DeleteLogHandler(record.id)">删除</a>
+        </template>
+        <template v-if="column.title === '日期'">
+          {{ moment.unix(record.date).format("YYYY-MM-DD") }}
+        </template>
+      </template>
+    </a-table>
+    <!--  编辑日志 -->
+    <a-modal v-model:visible="data.showEditModal" title="修改日志" @ok="handleOk">
+      <template #footer>
+        <a-button key="back" @click="handleCancel">取消</a-button>
+        <a-button key="submit" type="primary" @click="handleOk">完成</a-button>
+      </template>
+      <a-form
+          :model="logItem"
+          name="basic"
+          :label-col="{ span: 4 }"
+          :wrapper-col="{ span: 20 }"
+          autocomplete="off"
       >
-        <a-textarea :rows="5" v-model:value="logItem.content">
+        <a-form-item label="日期" name="date">
+          <a-date-picker style="width: 100%" v-model:value="today" @select="onSelect"/>
+        </a-form-item>
 
-        </a-textarea>
-      </a-form-item>
+        <a-form-item label="工作大类" name="type1" :rules="[{ required: true, message: '请选择工作大类' }]">
+          <a-select ref="select" v-model:value="logItem.type1" style="width: 100%" @change="type1handleChange">
+            <a-select-option v-model:value="item.id" v-for="(item,index) in type1Data" :key="index">
+              {{ item.description }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+
+        <a-form-item label="工作子类" name="type2" :rules="[{ required: true, message: '请选择工作子类!' }]">
+          <a-select ref="select" style="width: 100%" v-model:value="logItem.type2">
+            <a-select-option :value="item.id" v-for="(item,index) in type2Data" :key="index">
+              {{ item.description }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+
+        <a-form-item label="工作内容" name="content" :rules="[{ required: true, message: '请输入工作内容' }]">
+          <a-textarea :rows="5" v-model:value="logItem.content">
+          </a-textarea>
+        </a-form-item>
 
 
-    </a-form>
+      </a-form>
 
-  </a-modal>
+    </a-modal>
+  </div>
+
 </template>
 
 <script setup lang="ts">
 import {computed, onMounted, reactive,} from "vue"
 import moment from "moment"
 import "moment/locale/zh-cn";
-import {IAddLogData, IPageRequestData, IWorkContent, ModifyLog} from "@/types/log";
+import {DeleteLog, ExportLog, ExportLogRequest, IAddLogData, IWorkContent, ModifyLog, SearchLog} from "@/types/log";
 import {logStore} from "@/store/log";
 import {storeToRefs} from "pinia";
 
@@ -87,16 +87,17 @@ import {type2Store} from "@/store/type2";
 import {type1Store} from "@/store/type1";
 
 
-import "dayjs/locale/zh-cn";
 import dayjs, {Dayjs} from "dayjs";
+import {IPageRequestData} from "@/types/commont";
+import {Djs2UnixTime} from "@/utils/time";
 
 
 const columns = [
-  {title: '日期', dataIndex: 'date',},
-  {title: '工作大类', dataIndex: 'type1',},
-  {title: '工作子类', dataIndex: 'type2'},
-  {title: '工作内容', dataIndex: 'content'},
-  {title: '操作', key: 'operation',}
+  {title: '日期', dataIndex: 'date', fixed: 'left', width: 100,},
+  {title: '工作大类', dataIndex: 'type1', width: 100,},
+  {title: '工作子类', dataIndex: 'type2', width: 100,},
+  {title: '工作内容', dataIndex: 'content', ellipsis: true,},
+  {title: '操作', key: 'operation', fixed: 'right', width: 100,}
 ];
 
 
@@ -115,7 +116,7 @@ const pagination = computed(() => ({
 const handleTableChange = async (pag: any,) => {
   const a: IPageRequestData = {
     pageIndex: pag.current,
-    pageSize: pag.pageSize
+    pageSize: pag.pageSize,
   }
   await getLogData(a)
 };
@@ -125,16 +126,17 @@ const data = reactive({
   columns,
   pagination,
   showEditModal: false,
+  content:"",
 })
 
 let logItem: IAddLogData = reactive({} as IAddLogData)
 
 const {LogData} = storeToRefs(logStore())
-const {getLogData} = logStore()
+const {getLogData,searchLog} = logStore()
 
 //  选择日期
 const onSelect = (value: Dayjs,) => {
-  logItem.date = moment(value.format("YYYY-MM-DD")).unix()
+  logItem.date = Djs2UnixTime(value)
 };
 
 const defaultPageObj: IPageRequestData = {
@@ -174,7 +176,6 @@ const handleCancel = () => {
 
 
 const {type1Data} = storeToRefs(type1Store())
-
 const type1handleChange = async (value: number) => {
   await getType2List({pid: value})
   logItem.type2 = type2Data.value[0].id
@@ -195,7 +196,46 @@ const type1handleChange = async (value: number) => {
 
 //  工作子类
 const {type2Data} = storeToRefs(type2Store())
-const {getType2List} = type2Store()
+const {getType2List,} = type2Store()
+
+
+//  删除日志
+const DeleteLogHandler = async (id: number) => {
+  await DeleteLog({id: id})
+  await getLogData(defaultPageObj)
+}
+
+
+// 导出日志
+const ExportRequest:ExportLogRequest={
+  dateStart: 0,
+  dateEnd:0
+}
+const onRangeChange = (value: [Dayjs, Dayjs], dateString: [string, string]) => {
+  ExportRequest.dateStart=Djs2UnixTime(value[1])
+  ExportRequest.dateEnd=Djs2UnixTime(value[1])
+
+};
+const ExportLogHandler=()=>{
+  if (ExportRequest.dateStart===0){
+    return
+  }
+  ExportLog(ExportRequest)
+}
+
+
+// 搜索日志
+const SearchLogHandler=(value:string)=>{
+  searchLog({content:value})
+}
+const ResetSearchLogHandler=()=>{
+  if (data.content==""){
+    return
+  }
+  getLogData(defaultPageObj)
+  data.content=""
+}
+
 
 
 </script>
