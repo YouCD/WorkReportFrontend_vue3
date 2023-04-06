@@ -58,6 +58,7 @@ import {BaseUrl} from "@/request";
 import {UpdateCheck} from "@/types/update";
 import Icon from "@/components/Icon.vue"
 import { TabletFilled, SoundFilled, SettingFilled,ToolFilled,PieChartOutlined} from '@ant-design/icons-vue';
+import {Urls} from "@/request/url";
 
 let menuList = ref([
   {
@@ -115,7 +116,8 @@ const initWebSocket = () => { //初始化weosocket
     protocol = "wss://"
   }
   // if (process.env.VUE_APP_API_ROOT) {
-  wsUrl = protocol + BaseUrl().split("//")[1] + "w/update";
+  wsUrl = protocol + BaseUrl().split("//")[1] + Urls.update;
+  console.log(wsUrl)
   // } else {
   //   wsUrl = protocol + window.location.host + "/w/update"
   // }

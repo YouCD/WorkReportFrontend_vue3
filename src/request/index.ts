@@ -12,7 +12,7 @@ export function BaseUrl(): string {
     if (window.location.hostname == "localhost") {
         hostname = "127.0.0.1"
         port = "8080"
-        return protocol + "//" + hostname + ":" + port + "/api"
+        return protocol + "//" + hostname + ":" + port + "/api/"
     }
 
     return origin + "/api"
