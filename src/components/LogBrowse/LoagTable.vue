@@ -13,7 +13,6 @@
     <a-table
         :columns="data.columns"
         :data-source="LogData"
-        :row-key="record => record.id"
         :pagination="data.pagination"
         @change="handleTableChange"
         size="small"

@@ -6,6 +6,8 @@
         <a-menu-item key="99">
           <template #icon>
             <pie-chart-outlined/>
+
+            <Icon :icon="PieChartOutlined"></Icon>
           </template>
           <router-link to="/">
             Home
@@ -14,13 +16,13 @@
         <a-sub-menu :key="index" v-for="(item,index) in menuList ">
           <template #title>
             <span>
-              <component :is="$icons[item.icon]"/>
+               <Icon :icon="item.icon"></Icon>
               <span>{{ item.menu }}</span>
             </span>
           </template>
           <a-menu-item :key="children" v-for="(children,index) in item.children ">
-            <component :is="$icons[children.icon]" class="icon"/>
-
+            <Icon :icon="children.icon" class="icon"></Icon>
+<!--            <component :is="icons[children.icon]" class="icon"/>-->
             <router-link :to="children.path"> {{ children.menu }}</router-link>
           </a-menu-item>
         </a-sub-menu>
@@ -54,24 +56,25 @@
 import {onMounted, ref} from 'vue';
 import {BaseUrl} from "@/request";
 import {UpdateCheck} from "@/types/update";
-import * as wasi from "wasi";
+import Icon from "@/components/Icon.vue"
+import { TabletFilled, SoundFilled, SettingFilled,ToolFilled,PieChartOutlined} from '@ant-design/icons-vue';
 
 let menuList = ref([
   {
     menu: "日志",
-    icon: "TabletFilled",
+    icon: TabletFilled,
     children: [{
       menu: "浏览日志",
-      icon: "SoundFilled",
+      icon: SoundFilled,
       path: "/log"
     }]
   },
   {
     menu: "设置",
-    icon: "SettingFilled",
+    icon: SettingFilled,
     children: [{
       menu: "字典设置",
-      icon: "ToolFilled",
+      icon: ToolFilled,
       path: "/seting"
     }]
   }
@@ -112,7 +115,7 @@ const initWebSocket = () => { //初始化weosocket
     protocol = "wss://"
   }
   // if (process.env.VUE_APP_API_ROOT) {
-  wsUrl = protocol + BaseUrl.split("//")[1] + "w/update";
+  wsUrl = protocol + BaseUrl().split("//")[1] + "w/update";
   // } else {
   //   wsUrl = protocol + window.location.host + "/w/update"
   // }

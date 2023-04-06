@@ -55,10 +55,14 @@ const treeDataTemp = ref<DataNode>({
   title: '工作类别',
   children: [],
 });
-const expandedKeys = ref<number[]>(['工作大类'])
+
+//  最上层ID
+const TreeTopKey=999999
+
+const expandedKeys = ref<number[]>([TreeTopKey])
 const treeData = computed(() => {
   const rootDataNode: DataNode = {
-    key: '工作大类',
+    key: TreeTopKey,
     title: '工作大类',
     children: treeDataTemp.value.children,
   };
@@ -82,7 +86,7 @@ const TreeDataHandler = async () => {
 
     //  重置 原有的数据
     treeDataTemp.value.children=[]
-    expandedKeys.value=['工作大类']
+    expandedKeys.value=[TreeTopKey]
     const type2ListPromises = type1List.map(async (type1) => {
       const treData1: DataNode = {
         title: type1.description,

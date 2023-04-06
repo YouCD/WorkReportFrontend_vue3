@@ -1,12 +1,27 @@
 import axios from "axios";
 import {message} from "ant-design-vue";
-export const BaseUrl="http://127.0.0.1:8080/"
 import router from "@/router"
+
+
+export function BaseUrl(): string {
+    const protocol = window.location.protocol
+    const origin = window.location.origin
+    let hostname = ""
+    let port = ""
+    //  本地开发环境
+    if (window.location.hostname == "localhost") {
+        hostname = "127.0.0.1"
+        port = "8080"
+        return protocol + "//" + hostname + ":" + port + "/"
+    }
+
+    return origin
+}
 
 // 创建实例
 const service = axios.create({
     // baseURL: "https://work.youcd.online/",
-    baseURL:BaseUrl,
+    baseURL: BaseUrl(),
     timeout: 5000,
     headers: {
         "Content-Type": "application/json;charset-utf8"
@@ -25,7 +40,7 @@ service.interceptors.request.use((config) => {
 
 //响应拦截
 service.interceptors.response.use((res) => {
-    if (res.headers["content-type"]=="application/octet-stream"){
+    if (res.headers["content-type"] == "application/octet-stream") {
         return Promise.reject(res)
     }
     const code: number = res.data.code
@@ -35,17 +50,15 @@ service.interceptors.response.use((res) => {
     }
     return res
 
-},  (error) => {
-
+}, (error) => {
 
 
     message.error(error.response.data.msg);
     switch (error.response.status) {
-        case 401:console.log("sssssssssssssssssssssss",error.response.status)
-
-             router.push("/login")
+        //  如果后端返回401  要求 重新登入
+        case 401:
+            router.push("/login")
     }
-
 
 
     console.log(error)
