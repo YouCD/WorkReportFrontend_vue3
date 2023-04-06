@@ -124,8 +124,6 @@ const initWebSocket = () => { //初始化weosocket
   // 3.服务器每次返回信息都会执行一次onmessage方法
   webSock.value.onmessage = function (e) {
     console.log("服务器返回的信息: " + e.data);
-
-    console.log(e.data);
   };
 
   webSock.value.onopen = websocketonopen;
