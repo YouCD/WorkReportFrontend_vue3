@@ -2,20 +2,10 @@
   <div style="float: left;width: 48%;">
 
 
-    <!--    v-model:expandedKeys="expandedKeys"-->
-    <!--    v-model:selectedKeys="selectedKeys"-->
-    <!--    v-model:checkedKeys="checkedKeys"-->
     <a-tree
-
-
         :tree-data="treeData"
     >
-      <template #title="{ title, key }">
-        <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
-        <template v-else>{{ title }}</template>
-      </template>
     </a-tree>
-
 
   </div>
 
@@ -45,12 +35,12 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, reactive} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {AddType, ITypeData} from "@/types/seting";
 import {storeToRefs} from "pinia";
 import {type1Store} from "@/store/type1";
-import {TreeProps} from "ant-design-vue";
 import {FetchType2} from "@/types/type2";
+import {DataNode} from "ant-design-vue/es/vc-tree/interface";
 
 const data = reactive({
       type1Data: {} as ITypeData,
@@ -58,56 +48,82 @@ const data = reactive({
     }
 )
 
-interface treeItem {
-  title: string,
-  key: string | number,
-  children: []
-}
-
-const treData = {} as treeItem;
 
 const {type1Data} = storeToRefs(type1Store())
 const {getType1List, FindType1ByDescription} = type1Store()
+
+const treeDataTemp = ref<DataNode>({
+  key: '工作类别',
+  title: '工作类别',
+  children: [],
+});
+
+const treeData = computed(() => {
+  const rootDataNode: DataNode = {
+    key: '工作大类',
+    title: '工作大类',
+    children: treeDataTemp.value.children,
+  };
+  // console.log(treeDataTemp.value.children?.map(child => child.key))
+  return [rootDataNode];
+});
+
+
 onMounted(async () => {
   await getType1List()
   data.type2Data.pid = type1Data.value[0].id
 
-  // type1Data.value.forEach(item => {
-  //   const treData1 = [] as treeItem[];
-  //
-  //
-  //   treData1.key = item.id as number
-  //   treData1.title=item.description
-  //
-  //   FetchType2({pid: item.pid}).then(res => {
-  //
-  //     if (!res.data.type_list ) {
-  //       // const a: treeItem = {
-  //       //   title: item.description,
-  //       //   key: item.id,
-  //       //   children: []
-  //       // }
-  //       // treData1.children.push(a)
-  //       console.log("cccc", item)
-  //       console.log("treData.value?.children", item)
-  //
-  //       // res.data.type_list.forEach(iii => {
-  //       //   var  b:treeItem = {
-  //       //     title: iii.description,
-  //       //     key: iii.id
-  //       //   }
-  //       //
-  //       //   a.children?.push(b)
-  //       //   console.log("iii", b)
-  //       //
-  //       // })
-  //     }
-  //     treData.children.push(treData1)
-  //     console.log("必必剥剥必必剥剥必必剥剥", treData)
-  //
-  //   })
-  // })
+  TreeDataHandler()
+
 })
+
+
+const TreeDataHandler = async () => {
+  const type1List = type1Data.value;
+  if (type1List.length) {
+    const pid = type1List[0].id;
+    data.type2Data.pid = pid;
+
+    //  重置 原有的数据
+    treeDataTemp.value.children=[]
+    const type2ListPromises = type1List.map(async (type1) => {
+      const treData1: DataNode = {
+        title: type1.description,
+        key: type1.id,
+        children: [],
+      };
+
+      const res = await FetchType2({pid: type1.id});
+      if (res.data.type_list) {
+        const type2List = res.data.type_list.map((type2) => {
+          const treData2: DataNode = {
+            title: type2.description,
+            key: type2.id,
+          };
+          return treData2;
+        });
+        treData1.children = type2List;
+      }
+
+      // 判断 treeDataTemp.children 是否为 undefined
+      if (treeDataTemp.value.children === undefined) {
+        treeDataTemp.value.children = [];
+      }
+      treeDataTemp.value.children.push(treData1);
+
+      return treData1;
+    });
+
+    const treeDataList = await Promise.all(type2ListPromises);
+    const rootDataNode: DataNode = {
+      key: '工作类别',
+      title: '工作类别',
+      children: treeDataList,
+    };
+    treeData.value.push(rootDataNode);
+  }
+}
+
 
 // 添加工作大类
 const AddType1Handler = async () => {
@@ -119,64 +135,21 @@ const AddType1Handler = async () => {
   await AddType(data.type1Data)
   await getType1List()
   data.type1Data.description = ""
+  TreeDataHandler()
+
 }
 
 // 添加工作子类
-const AddType2Handler = () => {
+const AddType2Handler = async () => {
   if (data.type2Data.description === "") {
     return
   }
   data.type2Data.type = 2
-  AddType(data.type2Data)
+  await AddType(data.type2Data)
   data.type2Data.description = ""
+  TreeDataHandler()
 }
 
-
-const treeData: TreeProps['treeData'] = [
-  {
-    title: '工作类别',
-    key: '0-0',
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',
-        children: [
-          {title: 'leaf', key: '0-0-0-0', disableCheckbox: true},
-          {title: 'leaf', key: '0-0-0-1'},
-        ],
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1',
-        children: [{key: '0-0-1-0', title: 'sss'}],
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1',
-        children: [{key: '0-0-1-0', title: 'sss'}],
-      },
-    ],
-  },
-];
-
-
-//
-//
-//
-//
-//
-// const expandedKeys = ref<string[]>(['0-0-0', '0-0-1']);
-// const selectedKeys = ref<string[]>(['0-0-0', '0-0-1']);
-// const checkedKeys = ref<string[]>(['0-0-0', '0-0-1']);
-// watch(expandedKeys, () => {
-//   console.log('expandedKeys', expandedKeys);
-// });
-// watch(selectedKeys, () => {
-//   console.log('selectedKeys', selectedKeys);
-// });
-// watch(checkedKeys, () => {
-//   console.log('checkedKeys', checkedKeys);
-// });
 
 </script>
 
