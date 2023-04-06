@@ -58,7 +58,7 @@ import {onMounted, reactive, ref} from 'vue';
 import dayjs, {Dayjs} from 'dayjs';
 
 import moment from "moment";
-import {AddLog, FetchWeekLog, IAddLogData, IPageRequestData,} from "@/types/log";
+import {AddLog, FetchWeekLog, IAddLogData} from "@/types/log";
 import {storeToRefs} from "pinia";
 import {type1Store} from "@/store/type1";
 import {type2Store} from "@/store/type2";
@@ -92,21 +92,21 @@ function goToday() {
   today.value = dayjs()
   logData.date = moment(today.value?.format("YYYY-MM-DD")).unix()
 }
+
 //
 // tion GetWeekLog
 //  @Description: 获取本周日志
 //
 function GetWeekLog() {
-  data.showWeekLog=!data.showWeekLog
-    console.log("获取本周日志")
-  if (data.showWeekLog){
-    FetchWeekLog().then(res=>{
-      console.log(res.data)
-      data.weekData=res.data
+  data.showWeekLog = !data.showWeekLog
+  if (data.showWeekLog) {
+    FetchWeekLog().then(res => {
+      data.weekData = res.data
     })
   }
 }
-const kg= "\u3000\u3000\u3000"
+
+const kg = "\u3000\u3000\u3000"
 
 const type1handleChange = async (value: number) => {
 
@@ -121,8 +121,8 @@ const type2handleChange = (value: number) => {
 
 
 let data = reactive({
-  showWeekLog:false,
-  weekData:{},
+  showWeekLog: false,
+  weekData: {},
 });
 
 // 工作大类
@@ -145,7 +145,7 @@ const {getType2List} = type2Store()
 //  添加日志
 const {getLogData} = logStore()
 const AddLogHandler = async () => {
-  if (logData.content===""){
+  if (logData.content === "") {
     return
   }
 
