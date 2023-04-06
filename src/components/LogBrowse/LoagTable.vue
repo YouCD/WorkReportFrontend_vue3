@@ -25,7 +25,7 @@
           <a @click="DeleteLogHandler(record.id)">删除</a>
         </template>
         <template v-if="column.title === '日期'">
-          {{ moment.unix(record.date).format("YYYY-MM-DD") }}
+          {{ UnixTime2StrTime(record.date) }}
         </template>
       </template>
     </a-table>
@@ -77,8 +77,6 @@
 
 <script setup lang="ts">
 import {computed, onMounted, reactive,} from "vue"
-import moment from "moment"
-import "moment/locale/zh-cn";
 import {DeleteLog, ExportLog, ExportLogRequest, IAddLogData, IWorkContent, ModifyLog, SearchLog} from "@/types/log";
 import {logStore} from "@/store/log";
 import {storeToRefs} from "pinia";
@@ -89,7 +87,7 @@ import {type1Store} from "@/store/type1";
 
 import dayjs, {Dayjs} from "dayjs";
 import {IPageRequestData} from "@/types/commont";
-import {Djs2UnixTime} from "@/utils/time";
+import {Djs2UnixTime, UnixTime2StrTime} from "@/utils/time";
 
 
 const columns = [

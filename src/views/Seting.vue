@@ -1,12 +1,10 @@
 <template>
   <div style="float: left;width: 48%;">
-
-
     <a-tree
         :tree-data="treeData"
+        v-model:expandedKeys="expandedKeys"
     >
     </a-tree>
-
   </div>
 
 
@@ -57,14 +55,13 @@ const treeDataTemp = ref<DataNode>({
   title: '工作类别',
   children: [],
 });
-
+const expandedKeys = ref<number[]>(['工作大类'])
 const treeData = computed(() => {
   const rootDataNode: DataNode = {
     key: '工作大类',
     title: '工作大类',
     children: treeDataTemp.value.children,
   };
-  // console.log(treeDataTemp.value.children?.map(child => child.key))
   return [rootDataNode];
 });
 
@@ -73,8 +70,7 @@ onMounted(async () => {
   await getType1List()
   data.type2Data.pid = type1Data.value[0].id
 
-  TreeDataHandler()
-
+    TreeDataHandler()
 })
 
 
@@ -86,12 +82,14 @@ const TreeDataHandler = async () => {
 
     //  重置 原有的数据
     treeDataTemp.value.children=[]
+    expandedKeys.value=['工作大类']
     const type2ListPromises = type1List.map(async (type1) => {
       const treData1: DataNode = {
         title: type1.description,
         key: type1.id,
         children: [],
       };
+      expandedKeys.value.push(type1.id)
 
       const res = await FetchType2({pid: type1.id});
       if (res.data.type_list) {
