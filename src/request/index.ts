@@ -15,7 +15,7 @@ export function BaseUrl(): string {
         return protocol + "//" + hostname + ":" + port + "/api/"
     }
 
-    return origin + "/api"
+    return origin + "/api/"
 }
 
 // 创建实例
