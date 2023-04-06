@@ -1,7 +1,7 @@
 import axios from "axios";
 import {message} from "ant-design-vue";
 export const BaseUrl="http://127.0.0.1:8080/"
-
+import router from "@/router"
 
 // 创建实例
 const service = axios.create({
@@ -35,8 +35,19 @@ service.interceptors.response.use((res) => {
     }
     return res
 
-}, (error) => {
+},  (error) => {
+
+
+
     message.error(error.response.data.msg);
+    switch (error.response.status) {
+        case 401:console.log("sssssssssssssssssssssss",error.response.status)
+
+             router.push("/login")
+    }
+
+
+
     console.log(error)
 })
 
