@@ -33,7 +33,8 @@
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <div style="float: right;padding-right: 35px"  >
-          <a @click="UpdateHandler">{{ data.UpdateMsg }}</a>
+          <a v-if="!data.showUpdateDiv" >{{ data.UpdateMsg }}</a>
+          <a v-if="data.showUpdateDiv" @click="UpdateHandler" >{{ data.UpdateMsg }}</a>
         </div>
         <!--        <a-breadcrumb style="margin: 16px">-->
         <!--          <a-breadcrumb-item>User</a-breadcrumb-item>-->
@@ -59,6 +60,7 @@ import {UpdateCheck} from "@/types/update";
 import Icon from "@/components/Icon.vue"
 import { TabletFilled, SoundFilled, SettingFilled,ToolFilled,PieChartOutlined} from '@ant-design/icons-vue';
 import {Urls} from "@/request/url";
+import {treemap} from "@antv/g2plot/lib/utils/hierarchy/treemap";
 
 let menuList = ref([
   {
@@ -89,6 +91,7 @@ const webSock = ref<WebSocket>()
 
 const data = ref({
   UpdateMsg: "",
+  showUpdateDiv:false
 })
 // Websoket连接成功事件
 const websocketonopen = (res: any) => {
@@ -115,14 +118,7 @@ const initWebSocket = () => { //初始化weosocket
   } else if (window.location.protocol === "https:") {
     protocol = "wss://"
   }
-  // if (process.env.VUE_APP_API_ROOT) {
   wsUrl = protocol + BaseUrl().split("//")[1] + Urls.update;
-  console.log(wsUrl)
-  // } else {
-  //   wsUrl = protocol + window.location.host + "/w/update"
-  // }
-  // wsUrl="ws://"+window.location.host+"/w/update"
-  // console.log(process.env.VUE_APP_API_ROOT.split("//")[1])
   webSock.value = new WebSocket(wsUrl);
 
   // 3.服务器每次返回信息都会执行一次onmessage方法
@@ -139,14 +135,15 @@ const initWebSocket = () => { //初始化weosocket
 }
 
 onMounted(async () => {
-  //
   const d=await UpdateCheck()
   if (d.flag){
+    data.value.showUpdateDiv=true
     data.value.UpdateMsg=d.msg
   }
 })
 
 const UpdateHandler=()=>{
+  data.value.showUpdateDiv=false
   initWebSocket()
 }
 
