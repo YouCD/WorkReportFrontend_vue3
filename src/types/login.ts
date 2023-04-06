@@ -1,4 +1,5 @@
 import {http, IResponse} from "@/request";
+import {Urls} from "@/request/url";
 
 
 export interface LoginRequestData {
@@ -14,4 +15,4 @@ export interface LoginResponseData {
 
 //  登入
 export const LoginHandler = async (data: LoginRequestData) =>
-    await http.Post<IResponse<LoginResponseData>>('login', data);
+    await http.Post<IResponse<LoginResponseData>>(Urls.login, data);

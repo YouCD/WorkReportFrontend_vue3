@@ -1,6 +1,7 @@
 import {BaseUrl, http, IResponse} from "@/request";
 import {IPageRequestData, IPid} from "@/types/commont";
 import _default from "ant-design-vue/es/color-picker";
+import {Urls} from "@/request/url";
 
 
 export interface IWorkContent {
@@ -40,31 +41,31 @@ export interface IContentData {
 
 //  添加 日志
 export const AddLog = async (data: IAddLogData) =>
-    await http.Post<IResponse<any>>('/w/workLog', data);
+    await http.Post<IResponse<any>>(Urls.workLog, data);
 
 //  获取日志
 export const FetchLog = async (data: IPageRequestData) =>
-    await http.Get<IResponse<IWorkContentRespList>>('/w/workLog', data);
+    await http.Get<IResponse<IWorkContentRespList>>(Urls.workLog, data);
 
 
 //  修改日志
 export const ModifyLog = async (data: IAddLogData) =>
-    await http.Put<IResponse<any>>('/w/workLog', data);
+    await http.Put<IResponse<any>>(Urls.workLog, data);
 
 
 //  删除
 export const DeleteLog = async (data: IPid) =>
-    await http.Delete<IResponse<IWorkContentRespList>>('/w/workLog', data);
+    await http.Delete<IResponse<IWorkContentRespList>>(Urls.workLog, data);
 
 //  获取本周日志
 export const FetchWeekLog = async () =>
-    await http.Get<IResponse<any>>('/w/workLogFromWeek',);
+    await http.Get<IResponse<any>>(Urls.workLogFromWeek,);
 
 // 导出日志
 export const ExportLog =(data:ExportLogRequest)=>{
     let xhr = new XMLHttpRequest();
     //GET请求,请求路径url,async(是否异步)
-    xhr.open('GET', BaseUrl+"w/downloadWorklog?dateStart="+data.dateStart+"&dateEnd="+data.dateEnd, true);
+    xhr.open('GET', BaseUrl+Urls.downloadWorklog+"?dateStart="+data.dateStart+"&dateEnd="+data.dateEnd, true);
     let jwt=localStorage.getItem('jwt',) as string
     //设置请求头参数的方式,如果没有可忽略此行代码
     xhr.setRequestHeader("jwt",jwt );
@@ -99,4 +100,4 @@ export const ExportLog =(data:ExportLogRequest)=>{
 
 //  搜索日志 content=789
 export const SearchLog = async (data: IContentData) =>
-    await http.Get<IResponse<IWorkContentRespList>>('/w/workLogFromContent', data);
+    await http.Get<IResponse<IWorkContentRespList>>(Urls.workLogFromContent, data);
