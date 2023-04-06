@@ -53,8 +53,8 @@ const type1ChartHandler = () => {
     },
   });
   plot.render();
-  plot.on('tooltip:show', (data: any) => {
-    const type1 = FindType1ByDescription(data.data.title) as IType
+  plot.on('element:mouseenter', (data: any) => {
+    const type1 = FindType1ByDescription(data.data.data.type1) as IType
     if (type1){
       getType2CountList({id: type1.id})
     }
