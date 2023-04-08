@@ -17,13 +17,14 @@ import fs from "fs";
 //     plugins: [vue()],
 // })
 
+
+
 // 将静态文件上传到七牛云CDN   不需要可以使用上面默认的配置，qiniuKey.json 是配置文件
 const realFile = path.resolve(__dirname, './qiniuKey.json')
 
 function qiniuConfig(callback) {
     fs.readFile(realFile, (err, buffer) => {
         if (err) {
-            console.error(err);
             callback(err, null);
         } else {
             let d = buffer.toString();

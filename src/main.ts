@@ -1,12 +1,11 @@
 import {createApp} from 'vue'
-import {nextTick} from "@vue/runtime-core"
+
 
 import router from './router'
 
 //  antd
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-import * as Icons from '@ant-design/icons-vue'
 import {createPinia} from 'pinia'
 
 //  日期组件 汉化
@@ -16,7 +15,6 @@ dayjs.locale('zh-cn');
 
 
 import App from './App.vue'
-
 
 
 const app = createApp(App);

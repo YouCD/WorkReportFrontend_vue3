@@ -13,17 +13,17 @@
             Home
           </router-link>
         </a-menu-item>
-        <a-sub-menu :key="index" v-for="(item,index) in menuList ">
+        <a-sub-menu :key="index"  v-for="(item,index) in menu ">
           <template #title>
             <span>
                <Icon :icon="item.icon"></Icon>
-              <span>{{ item.menu }}</span>
+              <span>{{ item.name }}</span>
             </span>
           </template>
           <a-menu-item :key="children" v-for="(children,index) in item.children ">
             <Icon :icon="children.icon" class="icon"></Icon>
-<!--            <component :is="icons[children.icon]" class="icon"/>-->
-            <router-link :to="children.path"> {{ children.menu }}</router-link>
+            <!--            <component :is="icons[children.icon]" class="icon"/>-->
+            <router-link :to="'/'+item.path+'/'+ children.path"> {{ children.name }}</router-link>
           </a-menu-item>
         </a-sub-menu>
 
@@ -32,9 +32,9 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <div style="float: right;padding-right: 35px"  >
-          <a v-if="!data.showUpdateDiv" >{{ data.UpdateMsg }}</a>
-          <a v-if="data.showUpdateDiv" @click="UpdateHandler" >{{ data.UpdateMsg }}</a>
+        <div style="float: right;padding-right: 35px">
+          <a v-if="!data.showUpdateDiv">{{ data.UpdateMsg }}</a>
+          <a v-if="data.showUpdateDiv" @click="UpdateHandler">{{ data.UpdateMsg }}</a>
         </div>
         <!--        <a-breadcrumb style="margin: 16px">-->
         <!--          <a-breadcrumb-item>User</a-breadcrumb-item>-->
@@ -58,30 +58,16 @@ import {onMounted, ref} from 'vue';
 import {BaseUrl} from "@/request";
 import {UpdateCheck} from "@/types/update";
 import Icon from "@/components/Icon.vue"
-import { TabletFilled, SoundFilled, SettingFilled,ToolFilled,PieChartOutlined} from '@ant-design/icons-vue';
+import {PieChartOutlined, SettingFilled, SoundFilled, TabletFilled, ToolFilled} from '@ant-design/icons-vue';
 import {Urls} from "@/request/url";
-import {treemap} from "@antv/g2plot/lib/utils/hierarchy/treemap";
+import {RouteRecord, RouteRecordNormalized, RouteRecordRaw, useRoute, useRouter} from "vue-router";
+import {menu} from "@/router";
 
-let menuList = ref([
-  {
-    menu: "日志",
-    icon: TabletFilled,
-    children: [{
-      menu: "浏览日志",
-      icon: SoundFilled,
-      path: "/log"
-    }]
-  },
-  {
-    menu: "设置",
-    icon: SettingFilled,
-    children: [{
-      menu: "字典设置",
-      icon: ToolFilled,
-      path: "/seting"
-    }]
-  }
-])
+const router = useRouter()
+const route = useRoute()
+
+
+
 const collapsed = ref(true)
 const selectedKeys = ref([])
 
@@ -91,7 +77,7 @@ const webSock = ref<WebSocket>()
 
 const data = ref({
   UpdateMsg: "",
-  showUpdateDiv:false
+  showUpdateDiv: false
 })
 // Websoket连接成功事件
 const websocketonopen = (res: any) => {
@@ -99,7 +85,7 @@ const websocketonopen = (res: any) => {
 };
 // Websoket接收消息事件
 const websocketonmessage = (res: any) => {
-  data.value.UpdateMsg=res.data
+  data.value.UpdateMsg = res.data
 };
 // Websoket连接错误事件
 const websocketonerror = (res: any) => {

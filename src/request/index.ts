@@ -4,23 +4,15 @@ import router from "@/router"
 
 
 export function BaseUrl(): string {
-    const protocol = window.location.protocol
-    const origin = window.location.origin
-    let hostname = ""
-    let port = ""
-    //  本地开发环境
-    if (window.location.hostname == "localhost") {
-        hostname = "127.0.0.1"
-        port = "8080"
-        return protocol + "//" + hostname + ":" + port + "/api/"
+    if (import.meta.env.VITE_APP_API_URL == "") {
+        const origin = window.location.origin
+        return origin + "/api/"
     }
-
-    return origin + "/api/"
+    return import.meta.env.VITE_APP_API_URL
 }
 
 // 创建实例
 const service = axios.create({
-    // baseURL: "https://work.youcd.online/",
     baseURL: BaseUrl(),
     timeout: 5000,
     headers: {
