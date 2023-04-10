@@ -1,4 +1,5 @@
 import {createApp} from 'vue'
+import { MotionPlugin } from '@vueuse/motion'
 
 
 import router from './router'
@@ -20,6 +21,7 @@ import App from './App.vue'
 const app = createApp(App);
 app.use(Antd)
     .use(router)
+    .use(MotionPlugin)
     .use(createPinia())
     .mount('#app');
 // // 必须使用 nextTick，不然会有加载顺序问题，导致绑定失败
