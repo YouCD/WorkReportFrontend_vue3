@@ -1,9 +1,9 @@
 <template>
   <div >
-    <div class="BoxLeftClass" v-motion :initial="{  opacity: 0,  x: -500,}" :enter="{  opacity: 1,  x: 0,}">
+    <div class="BoxLeftClass" v-motion :initial="{  opacity: 0,  x: -50,}" :enter="{  opacity: 1,  x: 0,}">
       <AddLog/>
     </div>
-    <div class="RightClass" v-motion :initial="{  opacity: 0,  x: 500,}" :enter="{  opacity: 1,  x: 0,}">
+    <div class="RightClass" v-motion :initial="{  opacity: 0,  x: 50,}" :enter="{  opacity: 1,  x: 0,}">
       <LogTable/>
     </div>
   </div>
