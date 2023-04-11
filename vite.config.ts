@@ -18,7 +18,6 @@ import fs from "fs";
 // })
 
 
-
 // 将静态文件上传到七牛云CDN   不需要可以使用上面默认的配置，qiniuKey.json 是配置文件
 const realFile = path.resolve(__dirname, './qiniuKey.json')
 
@@ -35,7 +34,7 @@ function qiniuConfig(callback) {
 }
 
 export default async ({command, mode}: ConfigEnv): Promise<UserConfig> => {
-    const isBuild = command === 'build';
+    const isBuild = command === 'build' && mode === "pro";
     let config = null;
     await new Promise<void>((resolve, reject) => {
         qiniuConfig((err, result) => {
@@ -67,7 +66,9 @@ export default async ({command, mode}: ConfigEnv): Promise<UserConfig> => {
                 filePath: './dist/assets',
                 remoteFilePath: 'assets/',
                 openConfirm: false,
-                enabledRefresh: true
+                enabledRefresh: true,
+                uploadTarget:path.resolve(__dirname, './dist'),
+                appName:"WorkReport"
             }),
             vue()
         ]

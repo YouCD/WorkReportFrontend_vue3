@@ -168,4 +168,3 @@ a.forEach(item => {
         // menu = item.children as MenuItem[]
     }
 })
-console.log("sasasa",menu)

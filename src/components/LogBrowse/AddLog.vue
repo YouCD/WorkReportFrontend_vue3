@@ -148,7 +148,7 @@ const AddLogHandler = async () => {
   if (logData.content === "") {
     return
   }
-
+  logData.content = ""
   await AddLog(logData)
   // 添加完毕后要更新数据
   await getLogData({
