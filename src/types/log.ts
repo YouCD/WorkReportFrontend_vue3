@@ -65,7 +65,7 @@ export const FetchWeekLog = async () =>
 export const ExportLog =(data:ExportLogRequest)=>{
     let xhr = new XMLHttpRequest();
     //GET请求,请求路径url,async(是否异步)
-    xhr.open('GET', BaseUrl+Urls.downloadWorklog+"?dateStart="+data.dateStart+"&dateEnd="+data.dateEnd, true);
+    xhr.open('GET', BaseUrl()+Urls.downloadWorklog+"?dateStart="+data.dateStart+"&dateEnd="+data.dateEnd, true);
     let jwt=localStorage.getItem('jwt',) as string
     //设置请求头参数的方式,如果没有可忽略此行代码
     xhr.setRequestHeader("jwt",jwt );

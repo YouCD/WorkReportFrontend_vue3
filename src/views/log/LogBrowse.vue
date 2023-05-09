@@ -13,26 +13,6 @@ import LogTable from "@/components/LogBrowse/LoagTable.vue"
 import AddLog from "@/components/LogBrowse/AddLog.vue"
 
 
-// const data = reactive({
-//   activeKey: 2,
-//   showTable: false,
-//   showAddLog: true,
-// })
-
-// watch(
-//     () => data.activeKey,
-//     (newValue, oldValue) => {
-//       if (newValue == 1) {
-//         data.showTable = true
-//         data.showAddLog = false
-//       } else if (newValue == 2) {
-//         data.showTable = false
-//         data.showAddLog = true
-//       }
-//     }, {immediate: true}
-// )
-
-
 </script>
 <style scoped>
 .editable-row-operations a {

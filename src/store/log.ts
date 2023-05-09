@@ -8,24 +8,21 @@ import {IPageRequestData} from "@/types/commont";
 export const logStore = defineStore('log', () => {
 
     let LogData = ref<IWorkContent []>([])
-    let sum = 0
+    let sum = ref<number>(0)
     const getLogData = async (data: IPageRequestData) => {
         let res = await FetchLog(data)
-        sum = res.data.sum
+        sum.value = res.data.sum
         LogData.value = res.data.work_content_resp_list
     }
 
-     const searchLog = async (data: IContentData) => {
-        if (data.content==""){
+    const searchLog = async (data: IContentData) => {
+        if (data.content == "") {
             return
         }
         let res = await SearchLog(data)
-        sum = res.data.sum
+        sum.value = res.data.sum
         LogData.value = res.data.work_content_resp_list
     }
-
-
-
 
     return {
         LogData,
