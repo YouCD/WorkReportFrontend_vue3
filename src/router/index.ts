@@ -81,14 +81,6 @@ NProgress.configure({
 
 // 每次跳转页面前显示进度条
 router.beforeEach((to, from, next) => {
-    //  避免进入不存在的路由 导致 白屏
-    if (to.matched.length === 0) {  //如果未匹配到路由
-        from.name ? next({name: from.name}) : next('/');   //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
-    } else {
-        next();    //如果匹配到正确跳转
-    }
-
-
     //全局进度条的配置
     NProgress.configure({
         easing: "ease", // 动画方式
@@ -99,6 +91,17 @@ router.beforeEach((to, from, next) => {
         parent: "body", //指定进度条的父容器
     })
     NProgress.start()
+    if (to.path === '/login') {
+        next()
+        return
+    }
+
+
+    //  避免进入不存在的路由 导致 白屏
+    if (to.matched.length === 0) {  //如果未匹配到路由
+        from.name ? next({name: from.name}) : next('/');   //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
+        return
+    }
     next()
 })
 

@@ -48,7 +48,7 @@
 import {reactive} from "vue";
 import {LoginHandler, LoginRequestData} from "@/types/login";
 import {useRouter} from 'vue-router'
-
+import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 
 let data = reactive({
   labelCol: {span: 4},

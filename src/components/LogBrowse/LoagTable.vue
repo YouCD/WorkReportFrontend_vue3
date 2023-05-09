@@ -17,6 +17,7 @@
                 :pagination="pagination"
                 @change="handleTableChange"
                 size="small"
+                :loading="data.loading"
         >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.title === '操作'">
@@ -115,13 +116,15 @@ const pagination = computed(() => ({
 
 
 const handleTableChange = async (pag: any,) => {
-    data.current= pag.current
-    if (!data.isSearch){
+    data.current = pag.current
+    if (!data.isSearch) {
         const a: IPageRequestData = {
             pageIndex: pag.current,
             pageSize: pag.pageSize,
         }
+        data.loading = true
         await getLogData(a)
+        data.loading = false
         return
     }
 };
@@ -133,6 +136,7 @@ const data = reactive({
     content: "",
     isSearch: false,
     current: 1,
+    loading: false,
 })
 
 
@@ -147,7 +151,7 @@ const defaultPageObj: IPageRequestData = {
 }
 //  获取 工作日志
 onMounted(async () => {
-    getLogData(defaultPageObj)
+    await getLogData(defaultPageObj)
 })
 
 //  打开编辑 modal 框
@@ -182,7 +186,6 @@ const type1handleChange = async (value: number) => {
     await getType2List({pid: value})
     logItem.type2 = type2Data.value[0].id
 };
-
 
 
 //  工作子类
