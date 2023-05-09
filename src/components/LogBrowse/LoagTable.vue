@@ -203,7 +203,7 @@ const ExportRequest: ExportLogRequest = {
     dateEnd: 0
 }
 const onRangeChange = (value: [Dayjs, Dayjs], dateString: [string, string]) => {
-    ExportRequest.dateStart = Djs2UnixTime(value[1])
+    ExportRequest.dateStart = Djs2UnixTime(value[0])
     ExportRequest.dateEnd = Djs2UnixTime(value[1])
 
 };
