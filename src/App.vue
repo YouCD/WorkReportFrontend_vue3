@@ -2,7 +2,6 @@
 //  汉化
 import {ref} from "vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import { StarportCarrier } from 'vue-starport'
 
 const locale = ref(zhCN);
 </script>

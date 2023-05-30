@@ -3,78 +3,79 @@
     <div class="loginBox">
       <div class="login-panel">
         <a-form
-            :model="data.loginFrom"
-            name="basic"
-            :label-col="{ span: 8 }"
-            :wrapper-col="{ span: 16 }"
-            autocomplete="off"
-            @finish="onFinish"
-            @finishFailed="onFinishFailed"
+          :model="data.loginFrom"
+          name="basic"
+          :label-col="{ span: 8 }"
+          :wrapper-col="{ span: 16 }"
+          autocomplete="off"
+          @finish="onFinish"
+          @finish-failed="onFinishFailed"
         >
           <a-form-item
-              label="账户"
-              name="username"
-              :rules="[{ required: true, message: '请输入账户' }]"
+            label="账户"
+            name="username"
+            :rules="[{ required: true, message: '请输入账户' }]"
           >
             <a-input v-model:value="data.loginFrom.username">
               <template #prefix>
-                <UserOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+                <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
               </template>
             </a-input>
           </a-form-item>
 
           <a-form-item
-              label="密码"
-              name="password"
-              :rules="[{ required: true, message: '请输入密码!' }]"
+            label="密码"
+            name="password"
+            :rules="[{ required: true, message: '请输入密码!' }]"
           >
             <a-input-password v-model:value="data.loginFrom.password">
               <template #prefix>
-                <LockOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+                <LockOutlined style="color: rgba(0, 0, 0, 0.25)" />
               </template>
             </a-input-password>
           </a-form-item>
           <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-            <a-button class="login-form-button" type="primary" html-type="submit">登入</a-button>
+            <a-button
+              class="login-form-button"
+              type="primary"
+              html-type="submit"
+            >
+              登入
+            </a-button>
           </a-form-item>
         </a-form>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import {reactive} from "vue";
-import {LoginHandler, LoginRequestData} from "@/types/login";
-import {useRouter} from 'vue-router'
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import { reactive } from 'vue'
+import { LoginHandler, LoginRequestData } from '@/types/login'
+import { useRouter } from 'vue-router'
+import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 
 let data = reactive({
-  labelCol: {span: 4},
-  wrapperCol: {span: 20},
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 },
   loginFrom: {
-    username: "",
-    password: ""
+    username: '',
+    password: '',
   } as LoginRequestData,
-
-});
+})
 
 const router = useRouter()
-
 
 const onFinish = async () => {
   const result = await LoginHandler(data.loginFrom)
   if (result.flag) {
-    localStorage.setItem("jwt", result.data.token)
-    await router.push("/")
+    localStorage.setItem('jwt', result.data.token)
+    await router.push('/')
   }
-};
+}
 const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
-
-
+  console.log('Failed:', errorInfo)
+}
 </script>
 
 <style scoped>
@@ -104,7 +105,7 @@ const onFinishFailed = (errorInfo: any) => {
   width: 400px;
   height: 200px;
   top: 25%;
-  position: absolute
+  position: absolute;
 }
 
 .login-form-button {
