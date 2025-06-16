@@ -6,7 +6,7 @@ import router from './router'
 
 //  antd
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
+import 'ant-design-vue/dist/reset.css';
 import {createPinia} from 'pinia'
 
 //  日期组件 汉化
