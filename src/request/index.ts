@@ -13,7 +13,7 @@ export function BaseUrl(): string {
 // 创建实例
 const service = axios.create({
   baseURL: BaseUrl(),
-  timeout: 5000,
+  timeout: 600000,
   headers: {
     'Content-Type': 'application/json;charset-utf8',
   },

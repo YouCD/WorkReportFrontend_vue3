@@ -14,4 +14,7 @@ export const Urls: any = {
   workType: 'w/workType',
   workType1: 'w/workType1',
   workType2: 'w/workType2',
+  aiAddContent: 'ai/addContent',
+  aiWorkLogFromWeek: 'ai/workLogFromWeek',
+  sendEmail: 'ai/sendEmail',
 }

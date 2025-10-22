@@ -9,7 +9,7 @@
           </template>
           <router-link to="/">Home</router-link>
         </a-menu-item>
-        <a-sub-menu v-for="(item, index) in menu" :key="index">
+        <a-sub-menu v-for="(item, index) in menu" :key="item.path">
           <template #title>
             <span>
               <Icon :icon="item.icon"></Icon>
@@ -18,7 +18,7 @@
           </template>
           <a-menu-item
             v-for="(children, index1) in item.children"
-            :key="index1"
+            :key="children.path"
           >
             <Icon :icon="children.icon" class="icon"></Icon>
             <!--            <component :is="icons[children.icon]" class="icon"/>-->
