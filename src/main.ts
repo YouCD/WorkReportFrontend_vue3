@@ -33,3 +33,12 @@ app.use(Antd)
 //         app.component(key, Icons[key as keyof typeof Icons])
 //     }
 // })
+
+import { createFromIconfontCN } from '@ant-design/icons-vue'
+
+// 导入  iconfont.cn 的 图表 js 文件
+const iconfont = createFromIconfontCN({
+  scriptUrl: 'iconfont.js',
+})
+// 注册全局组件
+app.component('IconFont', iconfont)

@@ -3,6 +3,7 @@ import { Urls } from '@/request/url'
 import { http, IResponse } from '@/request'
 export interface IAiAddContent {
   content: string
+  date: number
 }
 
 export const AiAddContent = async (data: IAiAddContent) =>

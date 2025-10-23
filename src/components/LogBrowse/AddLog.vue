@@ -1,30 +1,17 @@
 <template>
-  <div class="BoxClass">
+  <div>
     <div class="RightClass">
       <div>
-        <a-row :gutter="24" style="margin-bottom: 10px">
-          <a-col :span="8">
-            <a-date-picker
-              v-model:value="today"
-              @select="onSelect"
-              style="width: 100%"
-            />
-          </a-col>
-          <a-col :span="8">
-            <a-button type="primary" style="width: 100%" @click="goToday">
-              今日
-            </a-button>
-          </a-col>
-          <a-col :span="8">
-            <a-button type="primary" style="width: 100%" @click="GetWeekLog">
-              本周日志
-            </a-button>
-          </a-col>
-        </a-row>
-
         <a-form :model="logData" name="basic" autocomplete="off">
-          <a-row :gutter="24">
-            <a-col :span="12">
+          <a-row :gutter="16">
+            <a-col :span="8">
+              <a-date-picker
+                v-model:value="today"
+                @select="onSelect"
+                style="width: 100%"
+              />
+            </a-col>
+            <a-col :span="8">
               <a-form-item
                 label="工作大类"
                 name="type1"
@@ -46,7 +33,7 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :span="12">
+            <a-col :span="8">
               <a-form-item
                 label="工作子类"
                 name="type2"
@@ -70,6 +57,22 @@
             </a-col>
           </a-row>
         </a-form>
+        <a-row gutter="16" style="margin-bottom: 10px">
+          <a-col :span="8">
+            <a-button style="width: 100%" @click="goToday">回到今日</a-button>
+          </a-col>
+          <a-col :span="8">
+            <a-button type="primary" style="width: 100%" @click="GetWeekLog">
+              本周日志
+            </a-button>
+          </a-col>
+          <a-col :span="8">
+            <a-button  style="width: 100%" @click="AddLogHandler">
+              添加
+            </a-button>
+          </a-col>
+        </a-row>
+
         <div v-if="!data.showWeekLog">
           <a-textarea v-model:value="logData.content" :rows="11"></a-textarea>
         </div>
@@ -84,26 +87,12 @@
         </div>
         <div style="margin: 10px 0 10px 0">
           <a-row justify="space-evenly">
-            <a-col :span="3">
-              <a-button
-                type="primary"
-                style="width: 90%"
-                @click="AddLogHandler"
-              >
-                添加
-              </a-button>
-            </a-col>
-            <a-col :span="3">
-              <a-button style="width: 90%" @click="logData.content = ''">
-                清空
-              </a-button>
-            </a-col>
-            <a-col :span="18">
-              <a-row>
+            <a-col :span="16">
+              <a-row  gutter="16">
                 <a-col :span="8">
                   <a-button
                     type="primary"
-                    style="width: 90%"
+                    style="width: 100%"
                     @click="AiWorkLogFromWeekHandler"
                   >
                     <icon-font type="icon-wuguan" style="font-size: 15px" />
@@ -112,22 +101,27 @@
                 </a-col>
                 <a-col :span="8">
                   <a-button
-                    type="primary"
-                    style="width: 90%"
-                    @click="AiAddContentHandler"
-                  >
-                    <icon-font type="icon-wuguan" style="font-size: 15px" />
-                    添加
-                  </a-button>
-                </a-col>
-                <a-col :span="8">
-                  <a-button
-                    type="primary"
-                    style="width: 90%"
+                    danger
+                    style="width: 100%"
                     @click="AiSendEmailHandler"
                   >
                     <icon-font type="icon-wuguan" style="font-size: 15px" />
-                    发送
+                    邮件发送
+                  </a-button>
+                </a-col>
+              </a-row>
+            </a-col>
+            <a-col :span="8">
+              <a-row  gutter="16">
+                <a-col :span="12">
+                  <a-button style="width: 100%" @click="logData.content = ''">
+                    清空
+                  </a-button>
+                </a-col>
+                <a-col :span="12">
+                  <a-button style="width: 100%" @click="AiAddContentHandler">
+                    <icon-font type="icon-wuguan" style="font-size: 15px" />
+                    智能添加
                   </a-button>
                 </a-col>
               </a-row>
@@ -150,11 +144,7 @@ import { type1Store } from '@/store/type1'
 import { type2Store } from '@/store/type2'
 import { logStore } from '@/store/log'
 import { AiAddContent, AiSendEmail, AiWorkLogFromWeek } from '@/types/ai'
-import { createFromIconfontCN } from '@ant-design/icons-vue'
 
-const IconFont = createFromIconfontCN({
-  scriptUrl: '/src/assets/iconfont.js',
-})
 const today = ref<Dayjs>()
 
 const logData: IAddLogData = reactive({
@@ -270,11 +260,6 @@ const AiSendEmailHandler = async () => {
 </script>
 
 <style scoped>
-.BoxClass {
-  overflow: hidden;
-  width: 100%;
-}
-
 .RightClass {
   float: left;
   padding: 10px;
