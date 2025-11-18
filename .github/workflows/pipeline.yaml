@@ -1,0 +1,29 @@
+name: WorkReport pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node
+        with:
+          node-version: 'v20.19.5'
+      - name: npm run build
+        run: |
+          node -v
+          npm -v
+          npm -g install npm@11.6.2
+          npm install
+          make build
+      - name: Release
+        uses: softprops/action-gh-release
+        with: # 将下述可执行文件 release 上去
+          files: |
+            dist.txz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
