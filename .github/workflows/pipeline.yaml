@@ -21,7 +21,7 @@ jobs:
           npm install
           make build
       - name: Release
-        uses: softprops/action-gh-release
+        uses: softprops/action-gh-release@v1
         with: # 将下述可执行文件 release 上去
           files: |
             dist.txz
