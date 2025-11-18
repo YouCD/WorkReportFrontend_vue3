@@ -1,5 +1,5 @@
 <template>
-  <component :is="icon" :style="$attrs as StyleValue " />
+  <component :is="icon" :style="$attrs as StyleValue" />
 </template>
 
 <script setup lang="ts">

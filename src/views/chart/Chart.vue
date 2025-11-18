@@ -1,43 +1,65 @@
 <template>
   <div>
     <div class="Box1">
-      <div id="Type1Count" style="width: 100%; background: white;height:360px;padding: 20px" v-motion :initial="{  opacity: 0,  x: -50,}" :enter="{  opacity: 1,  x: 0,}" ></div>
+      <div
+        id="Type1Count"
+        style="width: 100%; background: white; height: 360px; padding: 20px"
+        v-motion
+        :initial="{ opacity: 0, x: -50 }"
+        :enter="{ opacity: 1, x: 0 }"
+      ></div>
     </div>
     <div class="Box2">
-      <div id="Type1CountPie" style="width: 100%; background: white;height:360px;padding: 20px;" v-motion :initial="{  opacity: 0,  x: 50,}" :enter="{  opacity: 1,  x: 0,}"></div>
+      <div
+        id="Type1CountPie"
+        style="width: 100%; background: white; height: 360px; padding: 20px"
+        v-motion
+        :initial="{ opacity: 0, x: 50 }"
+        :enter="{ opacity: 1, x: 0 }"
+      ></div>
     </div>
   </div>
-  <div style="height: 360px;background: white;width: 100%;margin-top: 10px;overflow: hidden">
-    <div id="Type2Count" style="width: 100%; background: white;height:360px;padding: 20px;" v-motion :initial="{  opacity: 0,  y: 1000,}" :enter="{  opacity: 1,  y: 0,}"></div>
+  <div
+    style="
+      height: 360px;
+      background: white;
+      width: 100%;
+      margin-top: 10px;
+      overflow: hidden;
+    "
+  >
+    <div
+      id="Type2Count"
+      style="width: 100%; background: white; height: 360px; padding: 20px"
+      v-motion
+      :initial="{ opacity: 0, y: 1000 }"
+      :enter="{ opacity: 1, y: 0 }"
+    ></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {chartStore} from "@/store/chart";
-import {storeToRefs} from "pinia";
-import {onMounted, ref, watch} from "vue";
-import {Column, Pie} from '@antv/g2plot';
-import {type1Store} from "@/store/type1";
-import {IType} from "@/types/type1";
+import { chartStore } from '@/store/chart'
+import { storeToRefs } from 'pinia'
+import { onMounted, ref, watch } from 'vue'
+import { Column, Pie } from '@antv/g2plot'
+import { type1Store } from '@/store/type1'
+import { IType } from '@/types/type1'
 
+const { getType1CountList, getType2CountList } = chartStore()
+const { type1CountList, type2CountList } = storeToRefs(chartStore())
 
-const {getType1CountList, getType2CountList} = chartStore()
-const {type1CountList, type2CountList} = storeToRefs(chartStore())
-
-
-const {type1Data} = storeToRefs(type1Store())
-const {getType1List, FindType1ByDescription} = type1Store()
-
+const { type1Data } = storeToRefs(type1Store())
+const { getType1List, FindType1ByDescription } = type1Store()
 
 onMounted(async () => {
   await getType1CountList()
   type1ChartHandler()
   Type1CountPieHandler()
   await getType1List()
-  await getType2CountList({id: type1Data.value[0].id})
+  await getType2CountList({ id: type1Data.value[0].id })
   type2CountEcharts()
 })
-
 
 const type1ChartHandler = () => {
   const plot = new Column('Type1Count', {
@@ -51,18 +73,17 @@ const type1ChartHandler = () => {
     columnStyle: {
       radius: [50, 50, 0, 0],
     },
-  });
-  plot.render();
+  })
+  plot.render()
   plot.on('element:mouseenter', (data: any) => {
     const type1 = FindType1ByDescription(data.data.data.type1) as IType
-    if (type1){
-      getType2CountList({id: type1.id})
+    if (type1) {
+      getType2CountList({ id: type1.id })
     }
-  });
+  })
 }
 
-
-const type2Chart = ref<Column>();
+const type2Chart = ref<Column>()
 const type2CountEcharts = () => {
   const t = new Column('Type2Count', {
     data: type2CountList.value,
@@ -75,19 +96,19 @@ const type2CountEcharts = () => {
     columnStyle: {
       radius: [20, 20, 0, 0],
     },
-  });
+  })
   t.render()
 
   type2Chart.value = t
 }
 
 watch(
-    () => type2CountList.value,
-    (newValue, oldValue) => {
-      type2Chart.value?.changeData(type2CountList.value)
-    }, {immediate: true}
+  () => type2CountList.value,
+  (newValue, oldValue) => {
+    type2Chart.value?.changeData(type2CountList.value)
+  },
+  { immediate: true },
 )
-
 
 const Type1CountPieHandler = () => {
   const piePlot = new Pie('Type1CountPie', {
@@ -100,13 +121,13 @@ const Type1CountPieHandler = () => {
     label: {
       type: 'inner',
       offset: '-50%',
-      content: ({percent}) => `${(percent * 100).toFixed(0)}%`,
+      content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
       style: {
         textAlign: 'center',
         fontSize: 14,
       },
     },
-    interactions: [{type: 'element-active'}],
+    interactions: [{ type: 'element-active' }],
     statistic: {
       title: false,
       content: {
@@ -118,27 +139,24 @@ const Type1CountPieHandler = () => {
         content: '工作占比',
       },
     },
-  });
+  })
 
-  piePlot.render();
+  piePlot.render()
 }
-
 </script>
 
 <style scoped>
-
 .Box1 {
   height: 360px;
   width: calc(50% - 5px);
   margin-bottom: 10px;
-  float: left
+  float: left;
 }
 
 .Box2 {
   height: 360px;
   width: calc(50% - 5px);
   margin-bottom: 10px;
-  float: right
+  float: right;
 }
-
 </style>

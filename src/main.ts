@@ -1,29 +1,22 @@
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import { MotionPlugin } from '@vueuse/motion'
-
 
 import router from './router'
 
 //  antd
-import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/reset.css';
-import {createPinia} from 'pinia'
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/reset.css'
+import { createPinia } from 'pinia'
 
 //  日期组件 汉化
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-dayjs.locale('zh-cn');
-
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
+dayjs.locale('zh-cn')
 
 import App from './App.vue'
 
-
-const app = createApp(App);
-app.use(Antd)
-    .use(router)
-    .use(MotionPlugin)
-    .use(createPinia())
-    .mount('#app');
+const app = createApp(App)
+app.use(Antd).use(router).use(MotionPlugin).use(createPinia()).mount('#app')
 // // 必须使用 nextTick，不然会有加载顺序问题，导致绑定失败
 // nextTick(() => {
 //     // 配置全局对象

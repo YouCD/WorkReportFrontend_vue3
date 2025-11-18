@@ -109,8 +109,12 @@ router.beforeEach((to, from, next) => {
 
   //  避免进入不存在的路由 导致 白屏
   if (to.matched.length === 0) {
-    //如果未匹配到路由
-    from.name ? next({ name: from.name }) : next('/') //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
+    // 如果未匹配到路由，回退到上一个有效路由或跳转到首页
+    if (from.name && from.matched.length > 0) {
+      next({ name: from.name })
+    } else {
+      next('/') // 或者跳转到默认页面
+    }
     return
   }
   next()

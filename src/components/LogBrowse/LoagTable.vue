@@ -141,9 +141,8 @@ import { type1Store } from '@/store/type1'
 
 import dayjs, { Dayjs } from 'dayjs'
 import { IPageRequestData } from '@/types/commont'
-import { Djs2UnixTime,UnixTime2StrTime } from '@/utils/time'
-import { DeleteTwoTone, EditTwoTone ,} from '@ant-design/icons-vue'
-
+import { Djs2UnixTime, UnixTime2StrTime } from '@/utils/time'
+import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons-vue'
 
 const columns = [
   { title: '日期', dataIndex: 'date', fixed: 'left', width: 100 },

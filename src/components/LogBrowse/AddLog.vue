@@ -67,9 +67,7 @@
             </a-button>
           </a-col>
           <a-col :span="8">
-            <a-button  style="width: 100%" @click="AddLogHandler">
-              添加
-            </a-button>
+            <a-button style="width: 100%" @click="AddLogHandler">添加</a-button>
           </a-col>
         </a-row>
 
@@ -88,7 +86,7 @@
         <div style="margin: 10px 0 10px 0">
           <a-row justify="space-evenly">
             <a-col :span="16">
-              <a-row  gutter="16">
+              <a-row gutter="16">
                 <a-col :span="8">
                   <a-button
                     type="primary"
@@ -112,7 +110,7 @@
               </a-row>
             </a-col>
             <a-col :span="8">
-              <a-row  gutter="16">
+              <a-row gutter="16">
                 <a-col :span="12">
                   <a-button style="width: 100%" @click="logData.content = ''">
                     清空
