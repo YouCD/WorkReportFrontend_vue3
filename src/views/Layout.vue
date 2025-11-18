@@ -116,7 +116,7 @@ onMounted(async () => {
   if (JSON.stringify(d.data) !== '{}') {
     data.value.showUpdateDiv = true
     data.value.UpdateMsg = d.msg
-  } else if (d.msg === '更新完成，请重启软件！') {
+  } else if (d.msg === '更新完成，即将重启软件！') {
     data.value.showUpdateDiv = false
     data.value.UpdateMsg = d.msg
   }
