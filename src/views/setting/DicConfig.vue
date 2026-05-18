@@ -1,22 +1,22 @@
 <template>
-  <div style="float: left; width: 48%">
+  <div class="dic-left">
     <a-tree :tree-data="treeData" v-model:expandedKeys="expandedKeys"></a-tree>
   </div>
 
-  <div style="float: right; width: 48%">
-    <div style="padding: 10px; margin-bottom: 10px; background: white">
+  <div class="dic-right">
+    <div class="dic-form-row">
       <a-input
-        style="width: 80%"
+        class="dic-form-input"
         v-model:value="data.type1Data.description"
         placeholder="请输入工作大类"
       />
       <a-button @click="AddType1Handler" type="primary">添加</a-button>
     </div>
-    <div style="padding: 10px; margin-bottom: 10px; background: white">
+    <div class="dic-form-row">
       <a-select
         ref="select"
         v-model:value="data.type2Data.pid"
-        class="SelectClass"
+        class="dic-form-select"
       >
         <a-select-option
           :value="item.id"
@@ -28,9 +28,9 @@
       </a-select>
 
       <a-input
-        class="SelectClass"
+        class="dic-form-select"
         v-model:value="data.type2Data.description"
-        placeholder="请输入工作大类"
+        placeholder="请输入工作子类"
       />
       <a-button @click="AddType2Handler" type="primary">添加</a-button>
     </div>
@@ -153,8 +153,46 @@ const AddType2Handler = async () => {
 </script>
 
 <style scoped>
-.SelectClass {
-  width: calc(40% - 5px);
-  margin-right: 5px;
+.dic-left {
+  float: left;
+  width: 48%;
+}
+
+.dic-right {
+  float: right;
+  width: 48%;
+}
+
+.dic-form-row {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: white;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dic-form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.dic-form-select {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .dic-left,
+  .dic-right {
+    float: none;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .dic-form-select {
+    flex: 1 1 100%;
+  }
 }
 </style>
