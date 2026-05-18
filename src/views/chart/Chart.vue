@@ -38,6 +38,27 @@ import { Column, Pie } from '@antv/g2plot'
 import { type1Store } from '@/store/type1'
 import { IType } from '@/types/type1'
 
+const validDirections = new Set<string>(['ltr', 'rtl', 'inherit'])
+const directionMap: Record<string, CanvasDirection> = { left: 'ltr', right: 'rtl', up: 'ltr', down: 'ltr' }
+const originalDirectionSetter = Object.getOwnPropertyDescriptor(
+  CanvasRenderingContext2D.prototype,
+  'direction',
+)?.set
+if (originalDirectionSetter) {
+  Object.defineProperty(CanvasRenderingContext2D.prototype, 'direction', {
+    set(this: CanvasRenderingContext2D, v: string) {
+      const resolved = directionMap[v] || (validDirections.has(v) ? v as CanvasDirection : 'ltr')
+      originalDirectionSetter.call(this, resolved)
+    },
+    get(this: CanvasRenderingContext2D) {
+      return Object.getOwnPropertyDescriptor(
+        CanvasRenderingContext2D.prototype,
+        'direction',
+      )?.get?.call(this)
+    },
+  })
+}
+
 const { getType1CountList, getType2CountList } = chartStore()
 const { type1CountList, type2CountList } = storeToRefs(chartStore())
 
@@ -55,7 +76,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', checkMobile)
 })
 
-const getLegendPosition = () => (isMobile.value ? 'bottom' : 'right')
+const getLegendPosition = (): 'bottom' | 'right' => (isMobile.value ? 'bottom' : 'right')
 
 onMounted(async () => {
   await getType1CountList()
