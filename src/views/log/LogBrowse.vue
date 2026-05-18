@@ -38,4 +38,12 @@ import AddLog from '@/components/LogBrowse/AddLog.vue'
   float: right;
   width: calc(50% - 5px);
 }
+
+@media (max-width: 768px) {
+  .BoxLeftClass,
+  .RightClass {
+    float: none;
+    width: 100%;
+  }
+}
 </style>

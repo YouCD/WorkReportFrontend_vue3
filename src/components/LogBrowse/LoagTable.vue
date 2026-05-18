@@ -1,17 +1,17 @@
 <template>
-  <div style="background: white; margin-bottom: 10px; padding: 10px">
-    <a-range-picker @change="onRangeChange" style="width: 75%" />
+  <div class="toolbar-row">
+    <a-range-picker @change="onRangeChange" class="toolbar-picker" />
     <a-button
       type="primary"
-      style="float: right; width: 20%"
+      class="toolbar-btn"
       @click="ExportLogHandler"
     >
       导出日志
     </a-button>
   </div>
-  <div style="background: white; margin-bottom: 10px; padding: 10px">
+  <div class="toolbar-row">
     <a-input-search
-      style="width: 75%"
+      class="toolbar-picker"
       v-model:value="data.content"
       placeholder="输入工作内容"
       enter-button
@@ -19,7 +19,7 @@
     />
     <a-button
       type="primary"
-      style="float: right; width: 20%"
+      class="toolbar-btn"
       @click="ResetSearchLogHandler"
     >
       重置
@@ -34,6 +34,7 @@
       @change="handleTableChange"
       size="small"
       :loading="data.loading"
+      :scroll="{ x: 500 }"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.title === '操作'">
@@ -58,8 +59,8 @@
       <a-form
         :model="logItem"
         name="basic"
-        :label-col="{ span: 4 }"
-        :wrapper-col="{ span: 20 }"
+        :label-col="{ xs: 24, sm: 4 }"
+        :wrapper-col="{ xs: 24, sm: 20 }"
         autocomplete="off"
       >
         <a-form-item label="日期" name="date">
@@ -275,4 +276,22 @@ const ResetSearchLogHandler = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.toolbar-row {
+  background: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.toolbar-picker {
+  flex: 1;
+  min-width: 0;
+}
+.toolbar-btn {
+  flex-shrink: 0;
+  width: auto;
+  min-width: 80px;
+}
+</style>

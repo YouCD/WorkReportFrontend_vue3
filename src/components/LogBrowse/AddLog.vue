@@ -4,14 +4,14 @@
       <div>
         <a-form :model="logData" name="basic" autocomplete="off">
           <a-row :gutter="16">
-            <a-col :span="8">
+            <a-col :xs="24" :sm="8">
               <a-date-picker
                 v-model:value="today"
                 @select="onSelect"
                 style="width: 100%"
               />
             </a-col>
-            <a-col :span="8">
+            <a-col :xs="24" :sm="8">
               <a-form-item
                 label="工作大类"
                 name="type1"
@@ -33,7 +33,7 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :span="8">
+            <a-col :xs="24" :sm="8">
               <a-form-item
                 label="工作子类"
                 name="type2"
@@ -58,15 +58,15 @@
           </a-row>
         </a-form>
         <a-row gutter="16" style="margin-bottom: 10px">
-          <a-col :span="8">
+          <a-col :xs="8" :sm="8">
             <a-button style="width: 100%" @click="goToday">回到今日</a-button>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="8" :sm="8">
             <a-button type="primary" style="width: 100%" @click="GetWeekLog">
               本周日志
             </a-button>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="8" :sm="8">
             <a-button style="width: 100%" @click="AddLogHandler">添加</a-button>
           </a-col>
         </a-row>
@@ -84,45 +84,37 @@
           </div>
         </div>
         <div style="margin: 10px 0 10px 0">
-          <a-row justify="space-evenly">
-            <a-col :span="16">
-              <a-row gutter="16">
-                <a-col :span="8">
-                  <a-button
-                    type="primary"
-                    style="width: 100%"
-                    @click="AiWorkLogFromWeekHandler"
-                  >
-                    <icon-font type="icon-wuguan" style="font-size: 15px" />
-                    本周日志
-                  </a-button>
-                </a-col>
-                <a-col :span="8">
-                  <a-button
-                    danger
-                    style="width: 100%"
-                    @click="AiSendEmailHandler"
-                  >
-                    <icon-font type="icon-wuguan" style="font-size: 15px" />
-                    邮件发送
-                  </a-button>
-                </a-col>
-              </a-row>
+          <a-row justify="space-evenly" :gutter="[8, 8]">
+            <a-col :xs="12" :sm="8">
+              <a-button
+                type="primary"
+                style="width: 100%"
+                @click="AiWorkLogFromWeekHandler"
+              >
+                <icon-font type="icon-wuguan" style="font-size: 15px" />
+                本周日志
+              </a-button>
             </a-col>
-            <a-col :span="8">
-              <a-row gutter="16">
-                <a-col :span="12">
-                  <a-button style="width: 100%" @click="logData.content = ''">
-                    清空
-                  </a-button>
-                </a-col>
-                <a-col :span="12">
-                  <a-button style="width: 100%" @click="AiAddContentHandler">
-                    <icon-font type="icon-wuguan" style="font-size: 15px" />
-                    智能添加
-                  </a-button>
-                </a-col>
-              </a-row>
+            <a-col :xs="12" :sm="8">
+              <a-button
+                danger
+                style="width: 100%"
+                @click="AiSendEmailHandler"
+              >
+                <icon-font type="icon-wuguan" style="font-size: 15px" />
+                邮件发送
+              </a-button>
+            </a-col>
+            <a-col :xs="12" :sm="4">
+              <a-button style="width: 100%" @click="logData.content = ''">
+                清空
+              </a-button>
+            </a-col>
+            <a-col :xs="12" :sm="4">
+              <a-button style="width: 100%" @click="AiAddContentHandler">
+                <icon-font type="icon-wuguan" style="font-size: 15px" />
+                智能添加
+              </a-button>
             </a-col>
           </a-row>
         </div>
