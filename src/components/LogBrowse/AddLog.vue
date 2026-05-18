@@ -57,7 +57,7 @@
             </a-col>
           </a-row>
         </a-form>
-        <a-row gutter="16" style="margin-bottom: 10px">
+        <a-row :gutter="16" style="margin-bottom: 10px">
           <a-col :xs="8" :sm="8">
             <a-button style="width: 100%" @click="goToday">回到今日</a-button>
           </a-col>
