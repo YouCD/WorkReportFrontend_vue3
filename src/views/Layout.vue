@@ -1,6 +1,10 @@
 <template>
   <a-layout style="min-height: 100vh">
-    <a-layout-sider v-model:collapsed="collapsed" collapsible>
+    <a-layout-sider
+      v-if="!isMobile"
+      v-model:collapsed="collapsed"
+      collapsible
+    >
       <div class="logo" />
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="99">
@@ -21,7 +25,6 @@
             :key="children.path"
           >
             <Icon :icon="children.icon" class="icon"></Icon>
-            <!--            <component :is="icons[children.icon]" class="icon"/>-->
             <router-link :to="'/' + item.path + '/' + children.path">
               {{ children.name }}
             </router-link>
@@ -29,21 +32,72 @@
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
+    <a-drawer
+      v-if="isMobile"
+      :open="drawerVisible"
+      placement="left"
+      :closable="false"
+      :width="200"
+      :body-style="{ padding: 0 }"
+      @close="drawerVisible = false"
+    >
+      <a-menu
+        v-model:selectedKeys="selectedKeys"
+        theme="dark"
+        mode="inline"
+        style="height: 100%"
+      >
+        <a-menu-item key="99">
+          <template #icon>
+            <Icon :icon="PieChartOutlined"></Icon>
+          </template>
+          <router-link to="/" @click="drawerVisible = false">Home</router-link>
+        </a-menu-item>
+        <a-sub-menu v-for="(item, index) in menu" :key="item.path">
+          <template #title>
+            <span>
+              <Icon :icon="item.icon"></Icon>
+              <span>{{ item.name }}</span>
+            </span>
+          </template>
+          <a-menu-item
+            v-for="(children, index1) in item.children"
+            :key="children.path"
+          >
+            <Icon :icon="children.icon" class="icon"></Icon>
+            <router-link
+              :to="'/' + item.path + '/' + children.path"
+              @click="drawerVisible = false"
+            >
+              {{ children.name }}
+            </router-link>
+          </a-menu-item>
+        </a-sub-menu>
+      </a-menu>
+    </a-drawer>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <div style="float: right; padding-right: 35px">
-          <a v-if="!data.showUpdateDiv">{{ data.UpdateMsg }}</a>
-          <a v-if="data.showUpdateDiv" @click="UpdateHandler">
-            {{ data.UpdateMsg }}
-          </a>
+        <div class="header-content">
+          <a-button
+            v-if="isMobile"
+            type="text"
+            class="mobile-menu-btn"
+            @click="drawerVisible = true"
+          >
+            <template #icon>
+              <MenuOutlined />
+            </template>
+          </a-button>
+          <div class="header-right">
+            <a v-if="!data.showUpdateDiv">{{ data.UpdateMsg }}</a>
+            <a v-if="data.showUpdateDiv" @click="UpdateHandler">
+              {{ data.UpdateMsg }}
+            </a>
+          </div>
         </div>
-        <!--        <a-breadcrumb style="margin: 16px">-->
-        <!--          <a-breadcrumb-item>User</a-breadcrumb-item>-->
-        <!--          <a-breadcrumb-item>Bill</a-breadcrumb-item>-->
-        <!--        </a-breadcrumb>-->
       </a-layout-header>
-      <a-layout-content style="margin: 16px">
-        <div :style="{ padding: '12px', minHeight: '360px' }">
+      <a-layout-content :class="['layout-content', { 'layout-content-mobile': isMobile }]">
+        <div :style="{ padding: isMobile ? '8px' : '12px', minHeight: '360px' }">
           <router-view />
         </div>
       </a-layout-content>
@@ -54,16 +108,29 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { BaseUrl } from '@/request'
 import { UpdateCheck } from '@/types/update'
 import Icon from '@/components/Icon.vue'
-import { PieChartOutlined } from '@ant-design/icons-vue'
+import { PieChartOutlined, MenuOutlined } from '@ant-design/icons-vue'
 import { Urls } from '@/request/url'
 import { menu } from '@/router'
 
 const collapsed = ref(true)
 const selectedKeys = ref([])
+const isMobile = ref(false)
+const drawerVisible = ref(false)
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768
+}
+
+checkMobile()
+window.addEventListener('resize', checkMobile)
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 
 const webSock = ref<WebSocket>()
 
@@ -130,5 +197,24 @@ const UpdateHandler = () => {
 <style>
 .icon {
   padding-right: 10px;
+}
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+.mobile-menu-btn {
+  font-size: 18px;
+}
+.header-right {
+  margin-left: auto;
+  padding-right: 16px;
+}
+.layout-content {
+  margin: 16px;
+}
+.layout-content-mobile {
+  margin: 8px;
 }
 </style>
