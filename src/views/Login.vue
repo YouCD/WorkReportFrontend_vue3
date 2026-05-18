@@ -5,8 +5,9 @@
         <a-form
           :model="data.loginFrom"
           name="basic"
-          :label-col="{ span: 8 }"
-          :wrapper-col="{ span: 16 }"
+          layout="horizontal"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
           autocomplete="off"
           @finish="onFinish"
           @finish-failed="onFinishFailed"
@@ -34,7 +35,7 @@
               </template>
             </a-input-password>
           </a-form-item>
-          <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+          <a-form-item :wrapper-col="submitBtnWrapperCol">
             <a-button
               class="login-form-button"
               type="primary"
@@ -50,10 +51,26 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { LoginHandler, LoginRequestData } from '@/types/login'
 import { useRouter } from 'vue-router'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+
+// 移动端检测
+const windowWidth = ref(window.innerWidth)
+const isMobile = computed(() => windowWidth.value < 768)
+
+window.addEventListener('resize', () => {
+  windowWidth.value = window.innerWidth
+})
+
+const labelCol = computed(() => (isMobile.value ? { span: 5 } : { span: 8 }))
+const wrapperCol = computed(() =>
+  isMobile.value ? { span: 19 } : { span: 16 },
+)
+const submitBtnWrapperCol = computed(() =>
+  isMobile.value ? { span: 24, offset: 0 } : { offset: 8, span: 16 },
+)
 
 let data = reactive({
   labelCol: { span: 4 },
@@ -80,8 +97,6 @@ const onFinishFailed = (errorInfo: any) => {
 
 <style scoped>
 .outer-wrap {
-  /*只有同时为html和body设置height: 100%时，这里才生效，
-    并且随浏览器窗口变化始终保持和浏览器视窗等高*/
   height: 100vh;
   background-image: url('/src/assets/bg.png');
   background-size: cover;
@@ -110,5 +125,44 @@ const onFinishFailed = (errorInfo: any) => {
 
 .login-form-button {
   width: 100%;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .loginBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    min-height: 260px;
+    border-radius: 8px;
+  }
+
+  .login-panel {
+    width: 90%;
+    height: auto;
+    top: auto;
+    left: auto;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .login-form-button {
+    width: 100%;
+  }
+
+  .login-panel :deep(.ant-form-item) {
+    flex-direction: row !important;
+  }
+  .login-panel :deep(.ant-form-item-label) {
+    text-align: left !important;
+    padding-right: 4px;
+  }
 }
 </style>
