@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="chart-row">
     <div class="Box1">
       <div
         id="Type1Count"
-        style="width: 100%; background: white; height: 360px; padding: 20px"
+        class="chart-container"
         v-motion
         :initial="{ opacity: 0, x: -50 }"
         :enter="{ opacity: 1, x: 0 }"
@@ -12,25 +12,17 @@
     <div class="Box2">
       <div
         id="Type1CountPie"
-        style="width: 100%; background: white; height: 360px; padding: 20px"
+        class="chart-container"
         v-motion
         :initial="{ opacity: 0, x: 50 }"
         :enter="{ opacity: 1, x: 0 }"
       ></div>
     </div>
   </div>
-  <div
-    style="
-      height: 360px;
-      background: white;
-      width: 100%;
-      margin-top: 10px;
-      overflow: hidden;
-    "
-  >
+  <div class="Type2Count-wrapper">
     <div
       id="Type2Count"
-      style="width: 100%; background: white; height: 360px; padding: 20px"
+      class="chart-container"
       v-motion
       :initial="{ opacity: 0, y: 1000 }"
       :enter="{ opacity: 1, y: 0 }"
@@ -41,7 +33,7 @@
 <script setup lang="ts">
 import { chartStore } from '@/store/chart'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { Column, Pie } from '@antv/g2plot'
 import { type1Store } from '@/store/type1'
 import { IType } from '@/types/type1'
@@ -51,6 +43,19 @@ const { type1CountList, type2CountList } = storeToRefs(chartStore())
 
 const { type1Data } = storeToRefs(type1Store())
 const { getType1List, FindType1ByDescription } = type1Store()
+
+const isMobile = ref(false)
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768
+}
+checkMobile()
+window.addEventListener('resize', checkMobile)
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
+
+const getLegendPosition = () => (isMobile.value ? 'bottom' : 'right')
 
 onMounted(async () => {
   await getType1CountList()
@@ -68,7 +73,7 @@ const type1ChartHandler = () => {
     yField: 'count',
     seriesField: 'type1',
     legend: {
-      position: 'right',
+      position: getLegendPosition(),
     },
     columnStyle: {
       radius: [50, 50, 0, 0],
@@ -91,7 +96,7 @@ const type2CountEcharts = () => {
     yField: 'count',
     seriesField: 'type2',
     legend: {
-      position: 'right',
+      position: getLegendPosition(),
     },
     columnStyle: {
       radius: [20, 20, 0, 0],
@@ -124,7 +129,7 @@ const Type1CountPieHandler = () => {
       content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
       style: {
         textAlign: 'center',
-        fontSize: 14,
+        fontSize: isMobile.value ? 10 : 14,
       },
     },
     interactions: [{ type: 'element-active' }],
@@ -146,6 +151,24 @@ const Type1CountPieHandler = () => {
 </script>
 
 <style scoped>
+.chart-container {
+  width: 100%;
+  background: white;
+  height: 360px;
+  padding: 20px;
+}
+
+.Type2Count-wrapper {
+  background: white;
+  width: 100%;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.chart-row {
+  overflow: hidden;
+}
+
 .Box1 {
   height: 360px;
   width: calc(50% - 5px);
@@ -158,5 +181,23 @@ const Type1CountPieHandler = () => {
   width: calc(50% - 5px);
   margin-bottom: 10px;
   float: right;
+}
+
+@media (max-width: 768px) {
+  .Box1,
+  .Box2 {
+    width: 100%;
+    float: none;
+    height: 300px;
+  }
+
+  .chart-container {
+    padding: 10px;
+    height: 300px;
+  }
+
+  .Type2Count-wrapper {
+    margin-top: 0;
+  }
 }
 </style>
