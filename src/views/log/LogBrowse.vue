@@ -44,6 +44,7 @@ import AddLog from '@/components/LogBrowse/AddLog.vue'
   .RightClass {
     float: none;
     width: 100%;
+    transform: none !important;
   }
 }
 </style>

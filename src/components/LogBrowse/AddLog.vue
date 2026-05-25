@@ -91,7 +91,7 @@
                 style="width: 100%"
                 @click="AiWorkLogFromWeekHandler"
               >
-                <icon-font type="icon-wuguan" style="font-size: 15px" />
+                <icon-font type="icon-wuguan" style="font-size: 15px; pointer-events: none" />
                 本周日志
               </a-button>
             </a-col>
@@ -101,7 +101,7 @@
                 style="width: 100%"
                 @click="AiSendEmailHandler"
               >
-                <icon-font type="icon-wuguan" style="font-size: 15px" />
+                <icon-font type="icon-wuguan" style="font-size: 15px; pointer-events: none" />
                 邮件发送
               </a-button>
             </a-col>
@@ -112,7 +112,7 @@
             </a-col>
             <a-col :xs="12" :sm="4">
               <a-button style="width: 100%" @click="AiAddContentHandler">
-                <icon-font type="icon-wuguan" style="font-size: 15px" />
+                <icon-font type="icon-wuguan" style="font-size: 15px; pointer-events: none" />
                 智能添加
               </a-button>
             </a-col>
